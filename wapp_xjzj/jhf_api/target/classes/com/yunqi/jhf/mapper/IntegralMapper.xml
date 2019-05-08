@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.IntegralDao" >    
+	
+	<!-- 微信端 根据 userId获取列表 -->
+	<select id="getWeChatIntegralListByUserId" parameterType="Map" resultType="com.yunqi.jhf.vo.IntegralBean">
+		select i.id,
+		       i.user_id userId,
+		       u.user_name userName,
+		       u.user_integral_sum userIntegralSum,
+		       i.integral_num integralNum,
+		       i.integral_type integralType,
+		       i.integral_source integralSource,
+		       i.introduction,
+		       i.create_time createTime
+        from t_integral i ,
+             t_user u
+        where i.user_id = u.id
+        and  i.user_id = #{userId}
+        order by  i.create_time desc
+		LIMIT  #{page} , #{size}
+	</select>
+	
+	<select id="getWeChatIntegralListByUserIdCount" parameterType="Map" resultType="int">
+		SELECT  COUNT(1)
+		FROM t_integral i , t_user u
+        WHERE i.user_id = u.id
+        AND  i.user_id = #{userId}
+	</select>
+	
+	<!-- 统计 根据 userId 获取自己 已提现金额总数  -->
+	<select id="getIntegralNumSum" parameterType="Map" resultType="int">
+		SELECT  SUM(i.integral_num) integralNum
+		FROM 	t_integral i 
+		WHERE 	1=1
+		AND     i.user_id = #{userId}
+		AND     i.integral_type = #{integralType}
+	</select>  
+	
+
+</mapper>

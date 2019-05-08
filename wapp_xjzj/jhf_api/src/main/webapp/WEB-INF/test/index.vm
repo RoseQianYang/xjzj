@@ -1,0 +1,209 @@
+#parse("/include/header.vm")
+<title>小金优品</title>
+
+<style>
+	.swiper-container img {
+		height: 100%;
+	}
+
+.product-item-container {
+  height: 140px;
+  border-bottom: 1px solid #d9d9d9;
+  margin: 0 15px;
+}
+
+.product-item {
+  padding: 20px 0;
+  height: 140px;
+	display: block;
+	width: 100%;
+}
+
+.product-item-img {
+  height: 100px;
+  width: 100px;
+  float:left;
+}
+.product-item-img img{
+  display:block;
+  width：100%;
+  height:100%;
+}
+
+.product-item-content {
+	float:right;
+  display: flex;
+  flex-direction: column;
+  height: 100px;
+  /*width: 270px;*/
+  width: 62%;
+  position: relative;
+}
+
+.product-item-title {
+  font-size: 16px;
+  color: #1e1e1e;
+  margin-bottom: 12px;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  display:-webkit-box; 
+  -webkit-box-orient:vertical;
+  -webkit-line-clamp:2; 
+}
+
+.product-item-desc {
+  font-size: 12px;
+  color: #7f7f7f;
+  overflow:hidden; 
+  text-overflow:ellipsis;
+  white-space:nowrap;
+}
+
+.product-item-footer {
+  height: 39px;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: absolute;
+  bottom: -10px;
+  left: 0;
+}
+
+.product-item-price {
+  color: #b4282d;
+  font-size: 16px;
+  margin-right: 10px;
+}
+
+.product-item-num {
+  color: #7f7f7f;
+  font-size: 12px;
+}
+
+.product-item-btn {
+  width: 68px;
+  height: 28px;
+  color: #fff;
+  font-size: 12px;
+  background: #b4282d;
+  margin-right: 0;
+  border-radius: 2px;
+  line-height: 28px;
+  text-align: center;
+  border: none;
+}
+
+
+</style>
+
+</head>
+
+<body>
+	<div class="container">
+
+		<!--焦点图-->
+		<div class="row">
+			<div class="swiper-container swiper-index" style="height:220px;">
+				<div class="swiper-wrapper">
+					<div class="swiper-slide">
+						<img src="${ctxPath}/imgs/19.jpg" />
+						<!-- <a href="热卖专区.htm" class="btnstyle1"> -->
+						<!-- 					<i class="fa fa-chevron-right icon-color-1e1e1e" aria-hidden="true"></i>
+ -->
+						<!-- </a> -->
+					</div>
+
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+		<!--焦点图END-->
+
+		<div class="row">
+			<div class="newlist-style1">
+				<div class="imgbox-style4">
+					<img src="${ctxPath}/imgs/mbcs.png">
+				</div>
+				<div class="newlist-style1-msg">
+	
+					<a>
+						<div class="line1">今日上新：土特产黔瑞蕨菜新鲜野生农家龙爪菜泡菜脱水腌</div>
+						<i class="fa fa-chevron-right icon-ff5000" aria-hidden="true"></i>
+					</a>
+					<a>
+						<div class="line1">今日上新：正宗大条冬虫夏草断草非高海拔西藏青海野生挑选品自用送礼双实惠</div>
+						<i class="fa fa-chevron-right icon-ff5000" aria-hidden="true"></i>
+					</a>
+					
+				
+					<!--#foreach($new in $tProList)
+					<a href="${ctxPath}/front/product/getProductDetil.do?productId=$!{new.productId}&shareUserId=$userId">
+						<div class="line1">$!{new.orderNews}</div>
+						<i class="fa fa-chevron-right icon-ff5000" aria-hidden="true"></i>
+					</a>
+					#end-->
+				</div>
+			</div>
+		</div>
+		<!--最新动态-->
+
+		<div class="row mtb-style3 mt0">
+			<div class="text-center bg-color-1e1e1e"><div style="text-align:center;color:#1e1e1e;padding:5px 0;font-size: 20px;">今日热卖</div></div>
+			  <div class="product-container">
+			  
+			    <div class="product-item-container">
+				#foreach($pro in $tProList.list)
+    			<div class="product-item" > 
+      			<div class="product-item-img">
+        			<image src="${strUtil.uploadPath($!{pro.cover})}"/>
+						</div>
+	  
+						<div class="product-item-content">
+							<p class="product-item-title">$!{pro.title}</p>
+							<p class="product-item-desc">$!{pro.description}</p>
+        			<div class="product-item-footer">
+								<p class="product-item-price">${strUtil.rmb(${pro.price})}</p>
+          			<!--<p class="product-item-num">!{pro.price}人拼单</p>-->
+          			<a class="product-item-btn" href="${ctxPath}/front/product/getProductDetil.do?productId=$!{pro.id}&shareUserId=$userId">去拼团</a>
+        			</div>
+      			</div>
+    			</div>
+				#end
+  </div>
+			  
+			    </div>
+
+		</div>
+		<!--最新动态END-->
+		<div class="fixed-btn1e1e1e-box">
+			<div class="col-xs-12 col-md-12">
+				<div class="col-xs-4 col-md-4">
+					<a href="${ctxPath}/wechatIndex.do" class="bottom-nav active">
+						<img src="${ctxPath}/imgs/18-01.png" />
+						<em class="bottom-nav-em">首页</em>
+					</a>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<a href="${ctxPath}/shopping/shouYe.do" class="bottom-nav">
+						<img src="${ctxPath}/imgs/21-01.png" />
+						<em class="bottom-nav-em">商城</em>
+					</a>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<a href="${ctxPath}/usercenter/userCenterList.do" class="bottom-nav">
+						<img src="${ctxPath}/imgs/25-01.png" />
+						<em class="bottom-nav-em">我的</em>
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+
+
+
+</body>
+
+</html>

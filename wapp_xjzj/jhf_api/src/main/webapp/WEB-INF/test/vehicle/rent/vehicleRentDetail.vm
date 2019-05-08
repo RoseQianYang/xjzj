@@ -1,0 +1,59 @@
+#parse("/include/header.vm")
+<title>房车租赁详情</title> 
+</head>
+
+<body>
+<div class="container">
+	
+	#if($imgSrcList.size()>0)	
+	<div class="row">
+		<div class="swiper-container">
+		  <div class="swiper-wrapper">
+		    #foreach($img in $imgSrcList)
+				<div class="swiper-slide"><img src="${strUtil.uploadPath($img)}" class="img1"/></div>
+			#end
+		  </div>
+		  <div class="swiper-pagination"></div>
+		</div>
+	</div> 
+	#end
+	<div class="row">		 
+		 <div class="col-xs-12 col-md-12">
+			<p class="home-tit">$tvehicleRentById.vehicleName</p>
+			<p><a href="${ctxPath}/detailMap.do?address=$!{tvehicleRentById.address}" class="fsize13-color787878">
+			<img src="${ctxPath}/imgs/56-01.png" class="addr-img addr-img1">
+			## <i class="fa fa-map-marker icon-ff5000 fz16" aria-hidden="true"></i>
+			$tvehicleRentById.address
+				
+
+
+				</a>
+			</p>
+			## <a href="tel:$tvehicleRentById.phone" style="display:block" class="phone-border-box"><i class="fa fa-phone icon-ff5000" aria-hidden="true"></i>$tvehicleRentById.phone</a>
+		 </div>
+	</div>
+<!--功能简介-->
+    <div class="row f-mt12">	  
+		<div class="bg-color-1e1e1e text-center"><img src="${ctxPath}/imgs/gdz222.png" class="mesimg-style2" /></div>
+		<div class="content-msgbox">
+		#if($!{tvehicleRentById.content}) $!{tvehicleRentById.content} #else <p class="text-center">暂无详情</p>  #end
+		</div>
+    </div>	
+<!--功能简介END-->	
+<div class="footer-hei2"></div>
+	<a href="tel:$!{tvehicleRentById.phone}" class="fixed-btn-box">
+		<div class="ljlx-p">立即联系</div>
+	</a>
+</div>
+
+<script> 
+var mySwiper = new Swiper('.swiper-container',{
+pagination : '.swiper-pagination',
+autoplay: 5000,
+loop : true,
+autoplayDisableOnInteraction : false,
+})
+</script>
+
+</body>
+</html>

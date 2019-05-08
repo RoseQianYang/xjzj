@@ -1,0 +1,116 @@
+#parse("/include/header.vm")
+<title>积分兑换</title> 
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+	<div class="row">	
+		 <div class="style2-font">当前积分： <em class="icon-color-ff5001" id="moneynum">$!weChatUserIntegralSum</em></div>
+		 <div class="money-dh-box">
+			<div class="money-dh-box-jfshow">
+				<div class="stylebox1">
+					<p class="stylefont3" id="conversionNum">1000</p>
+					<p class="stylefont4">积分兑换</p>
+				</div>	
+				<div class="stylebox2">
+					￥<p class="stylefont5">100</p>
+				</div>	
+			</div>		
+			<div class="money-dh-box-detail">
+				<p class="fz18">兑换说明</p>	
+				<h5>1、进入“我的财富”点击右上方“兑换” </h5>
+				<h5>2、1000积分可以兑换100元 </h5>
+				<h5>3、提示兑换成功后，将会有工作人员联系您，静候佳音</h5>
+			</div> 
+		 </div>
+
+	</div>
+
+	<div class="fixed-btn-box bg-color-fff">
+		<p class="ljdh-p" id="integralbtn">立即兑换</p>
+	</div>
+</div>
+
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade"
+     id="confirm"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-text">确认兑换积分吗？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-danger" id="confirmdelbtn">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script>
+$('#integralbtn').click(function() {
+	var conversionNum = $('#conversionNum').html();
+	var moneynum = $('#moneynum').html();
+	
+
+	if(conversionNum > moneynum){
+		console.log(moneynum);
+	  console.log(conversionNum);
+		$('#modal-text').text('积分不足，无法兑换！');
+		$('#myModal').modal('show');	
+	}else{
+		console.log("222");
+		$('#confirm').modal('show');
+	}
+})	
+
+$("#confirmdelbtn").click(function(){	
+	$.ajax({
+		url: '${ctxPath}/front/integral/insert.do',
+		method: 'post',
+		data: {
+			integralNumSum: $('#moneynum').html(),
+		},
+		success: function (result) {
+			$('#confirm').modal('hide');
+			$('#modal-text').text(result.info);
+			$('#myModal').modal('show');	
+			
+		}
+	})
+});
+</script>
+
+</body>
+</html>

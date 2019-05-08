@@ -1,0 +1,206 @@
+#parse("/include/header.vm")
+<title>营地展示</title> 
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<style>
+  .tablist-js {
+    display: none;
+  }
+
+	.tablist-js img {
+		width:100%;
+		height:154px;
+	}
+</style>
+<script src="${ctxPath}/js/dropload.min.js"></script>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+	<div class="row bg-color-fff text-center">	  
+		<ul class="top-li4">
+			<li class="active">
+				<div class="btn-group">
+				  <button class="btn btn-default btn-sm dropdown-toggle border-none" type="button" id="show-address">
+					#if ($!address) $address #else 区域 <span class="caret"></span>#end 
+				  </button>
+				</div>				
+				<em class="hr-e2e2e2 pull-right">|</em>
+			</li>
+			<li><a href="${ctxPath}/front/campsite/campsiteList.do?near=1" class="astyle1">离我最近</a><em class="hr-e2e2e2 pull-right">|</em></li>
+			<li><a href="${ctxPath}/front/campsite/campsiteList.do?cateId=1" class="astyle1">自有营地</a><em class="hr-e2e2e2 pull-right">|</em></li>
+			<li><a href="${ctxPath}/front/campsite/campsiteList.do?cateId=2" class="astyle1">合作营地</a></li>
+		</ul>
+	</div>
+
+	<div class="row" id="loadingIcon" style="text-align:center;margin-top:10px;color:rgba(0,0,0,.65);">
+    <i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+    <span class="sr-only">正在获取用户位置...</span>
+    <div style="margin-top:6px;">正在获取用户位置...</div>
+  </div>
+	
+	<div class="row tablist-js" style="display:block;">	
+		##foreach($campsite in $campsiteList.list)
+			<!--<div class="col-xs-12 col-md-12">	
+				<div class="box-list-bg-f0f0f0-fff">
+					<a href="${ctxPath}/front/campsite/campsiteDetailList.do?campsiteId=$!{campsite.id}">
+						<div class="position-relative">
+							<img src="${strUtil.uploadPath($!{campsite.cover})}" class="radius10 imgheight154" />	
+							<div class="img-ltrtradius-box-opacity"></div>
+							<h3 class="img-ltrtradius-opacity-title">${strUtil.safeHtml(${strUtil.left($!{campsite.introduction},20)})}</h3>
+						</div>
+						<div class="padding20">
+							<p class="fsize16-fw700 p-mb5">${strUtil.safeHtml(${strUtil.left($!{campsite.title},20)})}</p>
+							<p class="boximg-list-double-rb">
+								<a href="${ctxPath}/detailMap.do?address=$!{campsite.address}" class="fsize13-color787878">
+								<em class="pull-left">${strUtil.safeHtml(${strUtil.left($!{campsite.address},20)})}</em>
+								<em class="pull-right">
+								<img src="${ctxPath}/imgs/address2.png" class="addr-img">
+								$!{campsite.distance}Km</em></a>
+								<em class="f-clear"></em>
+							</p>
+						</div>
+					</a>
+				</div>
+			</div>-->
+		##end
+	</div>
+	
+</div>
+	  
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+		<img src="${ctxPath}/imgs/loading.gif"/>
+    </div>
+  </div>
+</div>
+#parse("/include/backtop.vm")
+#parse("/include/footer.vm")
+<script type="text/javascript" src="${ctxPath}/js/cityPicker.js"></script> 
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+<script> 
+	var ctxPath = "${ctxPath}";
+	$(document).ready(function(){
+		$("#show-address").CityPicker()
+
+		function getQueryString(name) {
+			var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");     
+			var r = window.location.search.substr(1).match(reg);
+			if (r != null) return decodeURI(r[2]); 
+			return null;						
+		}
+
+		wx.config({
+      debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+      appId: '$!{wxjs_api.appId}', // 必填，公众号的唯一标识
+      timestamp: '$!{wxjs_api.timestamp}', // 必填，生成签名的时间戳
+      nonceStr: '$!{wxjs_api.nonceStr}', // 必填，生成签名的随机串
+      signature: '$!{wxjs_api.signature}', // 必填，签名
+      jsApiList: ['openLocation', 'getLocation'] // 必填，需要使用的JS接口列表
+    });
+
+		// 发送请求获取营地列表
+    function getDataList(position){
+      var data = {
+        latitude: position.latitude,
+        longitude: position.longitude,
+      }
+
+      if (location.href.indexOf('near=1') !== -1) {
+        data.near = 1
+      } else {
+				data.near = 0
+			}
+
+			var cateId = getQueryString('cateId')
+			if (cateId) {
+				data.cateId = parseInt(cateId,10)
+			} else {
+				data.cateId = 0
+			}
+
+			var address = getQueryString('address')
+			if (address) {
+				data.address = address
+			} else {
+				data.address = null
+			}
+    
+      $.ajax({
+        url: '${ctxPath}/front/campsite/getCampsiteAllListsByCateIdOrAddress.do',
+        method: 'POST',
+        contentType: 'application/json',
+        dataType: 'json',
+        data: JSON.stringify(data),
+        success: function(res){
+          $('#loadingIcon').fadeOut()
+          var list = res.data;
+          callback(list)
+        }
+      })
+    }
+
+		// 渲染列表
+		function callback(list){
+			if (list !== null) {
+				for (var i in list) {
+					var cover = list[i].cover
+					var index = cover.lastIndexOf('.')
+					var imgType = cover.slice(index)
+					var introduction = list[i].introduction.substr(0,19)
+					var title = list[i].title.substr(0,19)
+					var address = list[i].address.substr(0,19)
+					
+					$('.tablist-js').eq(0).append(
+						'<div class="col-xs-12 col-md-12">' +
+						'<div class="box-list-bg-f0f0f0-fff">' +
+						'<a href="${ctxPath}/front/campsite/campsiteDetailList.do?campsiteId=' + list[i].id + '">' +
+						'<div class="position-relative">'+
+						'<img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_o' + imgType + '" class="radius10 imgheight154" />' +
+						'<div class="img-ltrtradius-box-opacity"></div>' +
+						'<h3 class="img-ltrtradius-opacity-title">' + introduction+'</h3>' +
+						'</div>' +
+						'<div class="padding20">' +
+						'<p class="fsize16-fw700 p-mb5">' + title + '</p>' +
+						'<p class="boximg-list-double-rb">'+
+						'<a href="${ctxPath}/detailMap.do?address='+list[i].address+'" class="fsize13-color787878">'+
+						'<em class="pull-left">'+list[i].address+'</em>'+
+						'<em class="pull-right">'+
+						'<img src="${ctxPath}/imgs/address2.png" class="addr-img">'+
+						list[i].distance+'Km</em></a>'+
+						'<em class="f-clear"></em>'+
+						'</p>'+
+						'</div>'+
+						'</a>'+
+						'</div>'+
+						'</div>'
+					).fadeIn()
+				}
+			}
+		}
+
+    // 获取当前地址
+    function getLocation() {
+      wx.getLocation({
+        type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+        success: function (res) {
+          var latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+          var longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+          getDataList({latitude: parseFloat(latitude), longitude: parseFloat(longitude)})
+        },
+        cancel: function () {
+          getDataList({latitude: null, longitude: null})
+        }
+      });
+    }
+
+    wx.ready(function () {
+      getLocation();
+    });
+	})
+</script>
+
+</body>
+</html>

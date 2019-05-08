@@ -1,0 +1,72 @@
+#parse("/include/header.vm")
+<title>房车详情</title> 
+<style>
+.swiper-container img{height:100%;}
+</style>
+</head>
+
+<body>
+<div class="container">
+	#if($imgSrcList.size()>0)	
+	<div class="row">
+		<div class="swiper-container">
+		  <div class="swiper-wrapper">
+			#foreach($img in $imgSrcList)			
+				<div class="swiper-slide"><img src="${strUtil.uploadPath($img)}" class="img"/></div>  
+			#end
+		  </div>
+		  <div class="swiper-pagination"></div>
+		</div>
+	</div>
+	#end
+	<h3 class="vehicle-t">
+	  $!{vehicleById.vehicleName}
+	</h3>
+	<hr class="row hr-color-f2f2f2 mt0 mb0">
+	<div class="row text-center">
+		<img src="${ctxPath}/imgs/444.png" style="height: 40px;" class="vehicle-t2"/>
+		<div class="col-xs-12 col-md-12">
+			<span class="housecar-detail-attr bg-colcor-ebebeb">准驾类型</span>
+			<span class="housecar-detail-attr bg-colcor-ebebeb">档位</span>
+			<span class="housecar-detail-attr bg-colcor-ebebeb">床位数</span>
+			<span class="housecar-detail-attr bg-colcor-fafafa">$!{vehicleById.license}</span>
+			<span class="housecar-detail-attr bg-colcor-fafafa">$!{vehicleById.gears}</span>
+			<span class="housecar-detail-attr bg-colcor-fafafa">$!{vehicleById.bedNum}</span>
+			<span class="housecar-detail-attr bg-colcor-ebebeb">燃油类型</span>
+			<span class="housecar-detail-attr bg-colcor-ebebeb">房车款式</span>
+			<span class="housecar-detail-attr bg-colcor-ebebeb">官方指导价</span>
+			<span class="housecar-detail-attr bg-colcor-fafafa">$!{vehicleById.spec}</span>
+			<span class="housecar-detail-attr bg-colcor-fafafa">
+			#if(${vehicleById.functionType} == 1)
+				自行式
+			#elseif(${vehicleById.functionType} == 2)
+				拖挂式
+			#elseif(${vehicleById.functionType} == 3)
+				皮卡
+			#end
+			</span>#set($Price = $vehicleById.price / 100)  
+			<span class="housecar-detail-attr bg-colcor-fafafa">$!Price万</span>
+		</div>
+	</div>	
+<!--图文详情-->
+    <div class="row mtop20">	  
+		<div class="bg-color-1e1e1e text-center marginb0"><img src="${ctxPath}/imgs/555.png" class="mesimg-style1" /></div>
+		<div class="content-msgbox">
+		#if($!{vehicleById.content}) $!{vehicleById.content} #else <p class="text-center">暂无详情</p>  #end
+		</div> 
+    </div>	
+<!--图文详情END-->
+</div>
+
+<script> 
+var mySwiper = new Swiper('.swiper-container',{
+pagination : '.swiper-pagination',
+autoplay: 5000,
+loop : true,
+autoplayDisableOnInteraction : false,
+})
+
+</script>
+
+</body>
+</html>

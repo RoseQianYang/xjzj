@@ -1,0 +1,197 @@
+#parse("/include/header.vm")
+<title>确认订单</title> 
+
+</head>
+
+<html>
+<body class="bg-f0f0f0">
+
+
+<!-- $noDate -->
+<!-- -->
+<div class="container">
+	
+	#if(${noDate}==0)
+	<script>
+		window.location.href="${ctxPath}/shopping/shouYe.do"
+	</script>	
+	#end 
+	
+	<form id="myform" action="${ctxPath}/front/order/submitOrder.do">
+		<div class="row">
+		 
+			#if($!{address.size}==0)
+			
+			#else
+			<a href="${ctxPath}/front/user/userAddressList.do" class="col-xs-12 col-md-12 boxlist-style1-bgfff">
+			<i class="fa fa-chevron-right boxlist-awesome" aria-hidden="true"></i>
+					<h4 class="style1">
+						$!{address.consignee}
+						<em class="pull-right">$!{address.mobile}</em>				
+					</h4>
+					<input type="hidden" name="addressId" value="$!{address.id}"/>
+					<div class="map-address-box">
+						<em class="pull-left"><i class="fa fa-map-marker icon-ff5000" aria-hidden="true"></i></em>
+						<em class="style2" id="style4">$!{address.address}$!{address.addressDetail}</em>
+						<em class="style2" id="style2" style="display:none;">请添加收货地址</em>
+					</div>	
+				 </a>
+			
+			 #end
+			
+		<script>var orderList={price:"$price",hisTory:"1",list:[]}</script>
+		<script	src="${ctxPath}/js/storage.js"></script>
+
+		#foreach($sdb in $tScdList)
+			<script>
+				orderList.list.push("$!{sdb.id}")	
+				setStorage('orderList', orderList)	 	
+			</script>
+			<div class="col-xs-12 col-md-12 boxlist-style-bgfff">
+				<div class="col-xs-4 col-md-4"><img src="${strUtil.uploadPath($!{sdb.productCover})}"/></div>
+				<div class="col-xs-8 col-md-8">
+					<input type="hidden" name="scdIds" value="$!{sdb.id}"/>
+					<p class="fsize16-fw700 p-mb5 line1">
+						${strUtil.safeHtml(${strUtil.left($!{sdb.productTitle},25)})}
+					</p>
+					<p class="fsize14-color787878 p-mb5">
+						#if(${sdb.productSize} == "")					
+						#else <span class="mr10 productSize">$!{sdb.productSize}</span>
+						#end <span class="productColor">$!{sdb.productColor}</span>
+					</p>
+					<p class="boximg-list-double-rb mt30">
+						<em class="pull-left font-color-ff5000 productPrice fsize16-fw700">
+							￥${strUtil.rmb(${sdb.productPrice})}
+						</em>
+						<em class="pull-right fsize14-color5a5a5a">
+							x<span class="productNum">$!{sdb.productNum}</span>
+						</em>
+						<em class="f-clear"></em>
+					</p>
+				</div>
+		 		</div>
+			#end
+				
+		 	<div class="shop-Number">
+				<em for="inputEmail3" class="buyer-speak-p">买家留言：</em>
+				<input type="email" class="buyer-speak" id="inputEmail3" name="remark" placeholder="选填">			
+			</div>
+		</div>
+
+		<div class="footer-hei"></div>
+		<div class="mtop10 fixed-btn-box">
+			<div class="car-sum-box car-sum-box-width65">
+				实付款：￥<em class="car-sum-box-em">${strUtil.rmb($price)}</em>
+			</div>
+			<div id="quick-buy" class="quick-buy">提交订单</div>
+		</div>
+	</form>
+	</div>
+
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  	<div class="modal-dialog modal-sm">
+    	<div class="modal-content">
+	  		<p>支付成功</p>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<a href="订单详情列表.htm" class="btn btn-primary">查看订单</a>
+				</div>
+			</div>
+ 		</div>
+	</div>
+
+<div class="modal fade"
+     id="myModalDelete"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text">地址不能为空</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="${ctxPath}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/swiper.min.js"></script>
+<script type="text/javascript">
+
+	var mySwiper = new Swiper('.swiper-container', {
+		pagination : '.swiper-pagination',
+	})
+  
+  var style2 = $("#style4").html();	
+  if (style2 == null || style2.length==0) {
+		$("#style2").css('display', 'block');
+		$("#style4").css('display', 'none');
+  }
+
+	$("#quick-buy").click(function(e) {		  
+		e.preventDefault()
+		if (style2 == null || style2.length == 0) {
+      $('#myModalDelete').modal('show');
+		} else {
+			var scdIds = []
+			$('input[name="scdIds"]').each(function(){
+				scdIds.push($(this).val())
+			}) 
+			
+			$.ajax({
+				url: '${ctxPath}/front/order/submitOrder.do',
+				method: 'post',
+				data: {
+					scdIds: JSON.stringify(scdIds),
+					scdIds:scdIds.join(','), 
+					// scdIds: $('input[name="scdIds"]').val(),
+					addressId: $('input[name="addressId"]').val(),
+					remark: $('input[name="remark"]').val()
+				},
+				success: function(result) {
+					if (result.code == 0) {
+						location.href = "${ctxPath}/front/order/orderDetailList.do?orderId=" + result.data
+					} else {
+						$('#myModalDelete').modal('show');
+						$('#modal-text').html(result.info);
+					}
+				}
+			})
+		}
+	});
+
+	$(function(){  
+		//清空浏览器历史记录  
+		pushHistory();  
+		
+		//监听浏览器后退事件  
+		window.addEventListener("popstate",  
+			function(e) {  
+				e.preventDefault()
+		    // 转向指定的URL  
+		    location.href="/jhf/front/shoppingcart/cartDetail.do";  
+			}, false);  
+		    // 清空浏览器历史记录  
+		 function pushHistory() {  
+		        var url = "#";  
+		        var state = {  
+		            title: "title",  
+		            url: "#"  
+		        };  
+		        window.history.pushState(state, "title", "#");  
+		    }  
+		}); 
+</script>
+
+</body>
+</html>

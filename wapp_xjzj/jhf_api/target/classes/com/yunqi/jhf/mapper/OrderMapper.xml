@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yunqi.jhf.dao.OrderDao">
+
+	<!-- 根据 用户id、用户名称、订单编号查询 -->
+	<select id="getOrderList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.OrderBean">
+		SELECT o.id,
+		o.user_id userId,
+		u.user_name userName,
+		o.user_address_id
+		userAddressId,
+		o.order_name ,
+		o.order_total_price orderTotalPrice,
+		o.order_no orderNo,
+		o.order_status orderStatus,
+		o.logistics_id
+		logisticsId,
+		o.logistics_name logisticsName,
+		o.logistics_no logisticsNo,
+		o.remark,
+		o.payment_time paymentTime,
+		o.create_time createTime,
+		o.update_time updateTime
+		FROM t_user u, t_order o
+		WHERE o.user_id=u.id
+		<if test="orderStatus != null and  orderStatus != ''">
+			and o.order_status like "%${orderStatus}%"
+		</if>
+		<if test="userName != null and  userName != ''">
+			and u.user_name like "%${userName}%"
+		</if>
+		<if test="orderNo != null and  orderNo != ''">
+			and o.order_no like "%${orderNo}%"
+		</if>
+		order by o.create_time desc
+		limit #{page},20
+	</select>
+
+	<!-- 总数据条数 -->
+	<select id="getOrderListTotalSize" parameterType="Map"
+		resultType="int">
+		SELECT COUNT(1)
+		FROM t_user u, t_order o
+		WHERE o.user_id=u.id
+	</select>
+
+	<select id="getOrderDetailListByList" parameterType="com.yunqi.jhf.dao.domain.TOrder"
+		resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT  id,
+				product_id productId,
+				product_color productColor,
+				product_size productSize,
+				product_count productCount
+		FROM 	t_order_detail WHERE order_id IN
+		<foreach collection="orders" index="index" item="item" open="(" separator="," close=")">
+	                #{item.id}       
+	    </foreach>    
+	</select>
+	
+	<update id="updateOrderStatus" parameterType="com.yunqi.jhf.dao.domain.TOrder" >
+		UPDATE t_order SET order_status = '2' WHERE id in
+		<foreach collection="orders" index="index" item="item" open="(" separator="," close=")">
+	                #{item.id}       
+	    </foreach>    
+	</update>
+	
+	<update id="updateOrderDetailStatus" parameterType="com.yunqi.jhf.vo.OrderDetailBean" >
+		UPDATE t_order_detail SET order_status = '2' WHERE id in
+		<foreach collection="details" index="index" item="item" open="(" separator="," close=")">
+	                #{item.id}       
+	    </foreach>  
+	</update>
+	
+	<update id="returnStock" parameterType="com.yunqi.jhf.vo.OrderDetailBean">
+	UPDATE 	t_product_attribute 
+	SET 	stock = stock +  #{productCount}
+	WHERE 	product_id = #{productId} 
+	AND 	product_color = #{productColor} 
+	AND 	product_size = #{productSize}
+	</update>
+	
+</mapper>

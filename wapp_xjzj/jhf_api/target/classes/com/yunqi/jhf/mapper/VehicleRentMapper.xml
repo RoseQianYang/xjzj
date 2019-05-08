@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yunqi.jhf.dao.VehicleRentDao">
+
+	<!-- 多表查询 所有房车租赁 -->
+	<select id="getVehicleRentList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.VehicleRentBean">
+		SELECT  vr.id,
+		        vr.vehicle_id vehicleId,
+	         	v.vehicle_name vehicleName,
+		        vr.rent_price rentPrice,
+		        v.function_type functionType,
+		        v.image_id imageId,
+		        v.content,
+		        v.cover,
+		        v.license,
+		        v.bed_num bedNum,
+		        vr.address,
+		        vr.phone,
+		        vr.create_time createTime,
+		        vr.update_time updateTime
+		FROM    t_vehicle_rent vr, t_vehicle v
+		WHERE   vr.vehicle_id = v.id
+		<if test="vehicleName != null and vehicleName != ''">
+		and 	v.vehicle_name like "%${vehicleName}%" 
+		</if>
+		order by v.create_time desc
+		limit #{page},20
+	</select>
+
+  <select id="getWeChatVehicleRentList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.VehicleRentBean">
+		SELECT  vr.id,
+		        vr.vehicle_id vehicleId,
+	         	v.vehicle_name vehicleName,
+		        vr.rent_price rentPrice,
+		        v.function_type functionType,
+		        v.image_id imageId,
+		        v.content,
+		        v.cover,
+		        v.license,
+		        v.bed_num bedNum,
+		        vr.address,
+		        vr.phone,
+		        vr.create_time createTime,
+		        vr.update_time updateTime
+		FROM    t_vehicle_rent vr, t_vehicle v
+		WHERE   vr.vehicle_id = v.id
+		order by v.create_time desc
+		LIMIT  #{page} , #{size}
+	</select>
+	
+	<select id="getWeChatVehicleRentCount" parameterType="Map" resultType="int">
+		SELECT  COUNT(1)
+		FROM    t_vehicle_rent vr, t_vehicle v
+		WHERE    vr.vehicle_id = v.id
+	</select>
+
+   <!-- 根据 vehicleRentId 查询 详情-->
+   <select id="getVehicleRentId" parameterType="int" resultType="com.yunqi.jhf.vo.VehicleRentBean">
+		SELECT  vr.id,
+		        vr.vehicle_id vehicleId,
+	         	v.vehicle_name vehicleName,
+		        vr.rent_price rentPrice,
+		        v.function_type functionType,
+		        v.image_id imageId,
+		        v.content,
+		        v.cover,
+		        v.license,
+		        v.bed_num bedNum,
+		        vr.address,
+		        vr.phone,
+		        vr.create_time createTime,
+		        vr.update_time updateTime
+		FROM    t_vehicle_rent vr, t_vehicle v
+		WHERE   vr.vehicle_id = v.id
+		AND		vr.id = #{id}
+	</select>
+    
+</mapper>

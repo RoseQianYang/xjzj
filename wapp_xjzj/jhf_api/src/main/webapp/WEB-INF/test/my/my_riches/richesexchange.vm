@@ -1,0 +1,125 @@
+#parse("/include/header.vm")
+<title>提现</title>
+<style>
+  /*.richec-box2 {
+    height: 118px;
+  }*/
+</style>
+</head>
+ <body class="bg-f0f0f0"> 
+  <div class="container"> 
+  <div class="richec-box2 row"> 
+    <i class="fa fa-jpy richec-fa" aria-hidden="true"></i> 
+    <input type="number" class="richec-num2" id="richec-num2" placeholder="当前最多可提现$weChatUserIntegralSum元" />
+  </div> 
+  <div class="richec-box2 row"> 
+    <i class="fa fa-phone richec-fa" aria-hidden="true"></i> 
+    <input type="number" class="richec-num2" id="userMobile" placeholder="请输入手机号码方便工作人员与您联系" /> 
+  </div> 
+   <div class="richec-box3 row"> 
+    <h1>提现说明</h1> 
+    <p>1. 提现金额必须是整百的倍数 (如您的剩余财富有789元，只 能提700元）</p> 
+    <p>2. 每笔提现都需扣除8%税费（如提现100元，实际到账金额 为92元）</p> 
+    <p>3. 提现成功后，请保持手机畅通，我们的工作人员将会及时 联系您（节假日除外）</p> 
+   </div> 
+   <div class="richec-b" id="tx">
+    立即提现
+   </div> 
+  </div> 
+  <div class="richec-hei"></div> 
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">提示</h4>
+      </div>
+      <div class="modal-body">
+        <p id="modal-text"></p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-danger" data-dismiss="modal" id="myModalc">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     id="confirm"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+  <div class="modal-dialog modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+        <h4 class="modal-title">提示</h4>
+      </div>
+      <div class="modal-body">
+        <p class="modal-text">确认兑换积分吗？</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+        <button type="button" class="btn btn-danger" id="confirmdelbtn">确定</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  $("#tx").click(function(event) {
+  	var num = $("#richec-num2").val();
+    var userMobile = $("#userMobile").val()
+    var reg = /^[1-9]\d*00$/;
+    var mobileReg = /^1[34578]\d{9}$/
+
+  	if (num == "") {
+      $('#modal-text').text('请输入提现金额');
+      $('#myModal').modal('show');
+    } else if (userMobile == "") {
+      $('#modal-text').text('请输入联系电话');
+      $('#myModal').modal('show');
+    } else if (!mobileReg.test(userMobile)) {
+      $('#modal-text').text('联系电话格式有误，请重新输入');
+      $('#myModal').modal('show');   
+    } else if (!reg.test(num)) {
+      $('#modal-text').text('提现金额必须是整百的倍数');
+      $('#myModal').modal('show');   
+  	} else if (num > $weChatUserIntegralSum) {
+      $('#modal-text').text('财富不足，无法兑换！');
+      $('#myModal').modal('show');   
+    } else {
+      $('#confirm').modal('show');
+    }
+  });
+
+  $("#confirmdelbtn").click(function(){ 
+  $.ajax({
+    url: '${ctxPath}/front/my/insert.do',
+    method: 'post',
+    data: {
+      conversionNum: $("#richec-num2").val(),
+      userMobile: $("#userMobile").val(),
+    },
+    success: function (result) {
+      $('#confirm').modal('hide');
+      $('#modal-text').text(result.info);
+      $('#myModal').modal('show');  
+      $("#myModalc").click(function(event) {
+       window.location="${ctxPath}/front/my/integralList.do?status=1"
+      });
+    }
+  })
+});
+  
+
+</script>
+ </body>
+ </html>

@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.EventDao" >    
+
+	<!-- 获取活动信息列表 -->
+	<select id="getEventList" parameterType="Map" resultType="com.yunqi.jhf.vo.EventInfoBean">
+		SELECT 	e.id,
+				c.title eventCateName,
+				e.event_cate_id eventCateId,
+				e.title,
+				e.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.content,
+				e.create_time createtime
+		FROM 	t_event e,t_event_cate c 
+		WHERE	e.event_cate_id = c.id	
+		<if test="title != null and title != ''">
+			AND 	e.title like "%${title}%"
+		</if>
+		ORDER BY e.create_time DESC
+		LIMIT #{page} , 20
+	</select>
+	
+	<select id="getEventListIsShow" resultType="com.yunqi.jhf.vo.EventInfoBean">
+		
+
+		SELECT * FROM 
+		(SELECT e.id,
+				c.title eventCateName,
+				e.event_cate_id eventCateId,
+				e.title,
+				e.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.content,
+				"Y" isShow,
+				e.create_time createtime
+		FROM 	t_event e,t_event_cate c 
+		WHERE	e.event_cate_id = c.id	
+		AND		e.end_time > NOW()
+		UNION ALL
+		SELECT 	e.id,
+				c.title eventCateName,
+				e.event_cate_id eventCateId,
+				e.title,
+				e.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.content,
+				"N" isShow,
+				e.create_time createTime
+		FROM 	t_event e,t_event_cate c 
+		WHERE	e.event_cate_id = c.id	
+		AND		e.end_time <![CDATA[< NOW() ) t]]>
+		ORDER BY isShow DESC,endTime DESC
+	</select>
+
+	<!-- 获取活动列表参数条数 -->
+	<select id="getEventCount" parameterType="Map" resultType="int">
+		SELECT COUNT(1) 
+		FROM 	t_event e,t_event_cate c 
+		WHERE	e.event_cate_id = c.id
+		<if test="title != null and title != ''">
+			AND 	e.title like "%${title}%"
+		</if>
+	</select>
+	
+	<!-- 获取活动信息详情 -->
+	<select id="getEventById" parameterType="int" resultType="com.yunqi.jhf.vo.EventInfoBean">
+		SELECT 	e.id,
+				c.title eventCateName,
+				e.event_cate_id eventCateId,
+				e.title,
+				e.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.content,
+				e.create_time createtime
+		FROM 	t_event e,t_event_cate c 
+		WHERE	e.event_cate_id = c.id	
+		AND		e.id = #{id}
+	</select>
+	
+	
+	<select id="getEvenByTime" parameterType="Map" resultType="int">
+		SELECT	COUNT(1) 
+		FROM 	t_event 
+		WHERE 	<![CDATA[
+			(( 		end_time >= #{startTime} 
+			AND 	start_time <= #{startTime} ) OR
+			(		end_time >= #{endTime} 
+			AND 	start_time <= #{endTime}))
+		]]>
+		<if test="id != null">
+			AND	 id != #{id}
+		</if>
+	</select>
+
+</mapper>

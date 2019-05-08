@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.SysLogDao" >  
+
+
+    <!-- 系统日志数据 列表  -->
+	<select id="getSysLogList" parameterType="Map" resultType="com.yunqi.jhf.vo.SysLogBean">
+		SELECT 	sl.id,
+				sl.log_type logType,
+				sl.log_action logAction,
+				sl.log_content logContent,
+				sl.create_time createTime
+		FROM 	t_sys_log sl 
+		WHERE   1 = 1
+	    <if test="startTime != null">
+		    AND	    sl.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		sl.create_time <![CDATA[<=]]> #{endTime}
+		</if>
+		LIMIT #{page} , #{size}
+	</select>
+	
+	<!-- 系统日志 数据条数 -->
+	<select id="getSysLogListCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_sys_log sl 
+		WHERE    1 = 1
+		<if test="startTime != null">
+		AND 	sl.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+		AND		sl.create_time <![CDATA[<=]]> #{endTime}
+		</if>
+	</select>
+	
+</mapper>	

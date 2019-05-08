@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+	<meta name="viewport" content="initial-scale=1.0, user-scalable=no" />
+<link href="${ctxPath}/css/bootstrap.min.css" rel="stylesheet" />
+<link href="${ctxPath}/css/font-awesome.min.css" rel="stylesheet" />
+<link href="${ctxPath}/css/common.css" rel="stylesheet" />
+<style type="text/css">
+	html,body,#map {width: 100%;height: 100%;margin:0;}
+	#r-result{    
+		width: 95%;
+		margin: 10px auto;
+		position: absolute;
+		left: 10px;
+	}
+	.container {
+		padding-right: 0;
+		padding-left: 0;
+	}
+</style> 
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ib5QHglR4lnOvgqoZRf9fD92ZnLWxgHO"></script>
+	
+	<title>地图展示</title>
+</head>
+<body>
+
+	<!--  <header class="navbar-static-top bt-header-title">
+		<nav class="navbar navbar-default navbar-fixed-top bt-navbar-bg" role="navigation"> 
+			 <div class="col-xs-3 col-md-3">
+				<a href="javascript:history.go(-1)">
+				  <i class="fa fa-angle-left icon-angle-left-fff" aria-hidden="true"></i>
+				  <em class="icon-color-fff">返回</em>
+				</a>
+			 </div>
+			 <div class="col-xs-6 col-md-6 text-center">
+				<a class="bt-header-title">地图展示</a>
+			 </div>
+		 </nav>
+	</header>-->
+
+	<div id="map"></div>
+	<div id="r-result"></div>
+		
+	<div class="mtop10 fixed-btn-box bg-color-fff">
+		<a href="javascript:history.go(-1)" class="map-back">点击返回</a>
+	</div>	
+</body>		
+<script type="text/javascript" src="${ctxPath}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/bootstrap.min.js"></script>
+<script type="text/javascript">
+//获取浏览器地址中参数
+function GetQueryString(name) { 
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)","i"); 
+	var r = window.location.search.substr(1).match(reg); 
+	if (r!=null) return (r[2]); return null; 
+} 
+
+$(function(){
+	sContent =  decodeURI(GetQueryString("address"));
+	
+	if(!sContent){
+		alert("地址错误！");
+	}
+	//sContent =  "南昌市红谷滩新区市政府北七楼";
+
+	var map = new BMap.Map("map");
+	var point = new BMap.Point(115.53,28.41);
+	map.centerAndZoom(point,12);
+
+	// 创建地址解析器实例
+	var myGeo = new BMap.Geocoder();
+	// 将地址解析结果显示在地图上,并调整地图视野
+	myGeo.getPoint(sContent, function(point){
+		if (point) {
+			map.centerAndZoom(point, 16);
+			map.addOverlay(new BMap.Marker(point));
+			
+			var infoWindow = new BMap.InfoWindow(sContent);  // 创建信息窗口对象 
+		    map.openInfoWindow(infoWindow,point); //开启信息窗口
+		    
+		    document.getElementById("r-result").innerHTML = infoWindow.getContent();
+		}else{
+			alert("您选择地址没有解析到结果!");
+		}
+	}, "南昌市");
+	
+});	
+
+</script>
+</html>

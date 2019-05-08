@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yunqi.jhf.dao.ShoppingCartDetailDao">
+
+	<select id="getshopcartDetailpageList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.ShoppingCartDetailBean">
+	 SELECT scd.id,
+	 		scd.product_id productID,
+	 		scd.product_color productColor,
+	 		scd.product_size productSize,
+	 		scd.product_num productNum,
+	 		scd.product_price productPrice,
+	 		scd.create_time creatTime,
+	 		p.title productTitle,
+	 		p.cover productCover
+	   FROM t_shopping_cart_detail scd,t_product p   
+	   WHERE  scd.product_id=p.id AND shopping_cart_id=#{shopcartId} 
+	   ORDER BY creatTime DESC
+	   LIMIT #{page} , #{size}
+	</select>
+	
+	<select id="getshopcartDetailList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.ShoppingCartDetailBean">
+	 SELECT scd.id,
+	 		scd.product_id productID,
+	 		scd.product_color productColor,
+	 		scd.product_size productSize,
+	 		scd.product_num productNum,
+	 		scd.product_price productPrice,
+	 		scd.create_time creatTime,
+	 		p.title productTitle,
+	 		p.cover productCover
+	   FROM t_shopping_cart_detail scd,t_product p   
+	   WHERE  scd.product_id=p.id AND shopping_cart_id=#{shopcartId}
+	   ORDER BY creatTime DESC 
+	</select>
+	
+	<select id="getshopcartDetailCount" parameterType="Map" resultType="int">
+	  SELECT 	COUNT(1)
+	  FROM t_shopping_cart_detail scd,t_product p   
+	  WHERE  scd.product_id=p.id AND shopping_cart_id=#{shopcartId}
+	</select>
+
+
+	<select id="getshopcartDetail" parameterType="int"
+		resultType="com.yunqi.jhf.vo.ShoppingCartDetailBean">
+	 SELECT scd.id,
+	 		scd.product_id productID,
+	 		scd.product_color productColor,
+	 		scd.product_size productSize,
+	 		scd.product_num productNum,
+	 		scd.product_price productPrice,
+	 		scd.create_time creatTime,
+	 		p.title productTitle,
+	 		p.cover productCover
+	   FROM t_shopping_cart_detail scd,t_product p   
+	  WHERE  scd.product_id=p.id AND scd.id=#{shopCartDetailId}
+	  ORDER BY creatTime DESC 
+	</select>
+</mapper>

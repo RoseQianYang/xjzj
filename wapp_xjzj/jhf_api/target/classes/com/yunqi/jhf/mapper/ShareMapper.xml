@@ -1,0 +1,143 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.ShareDao" >    
+	<!-- 根据 分享的分类id   分享用户 获取分享信息列表   AND s.is_enabled="N"-->
+	<select id="getShareByNameOrCate" parameterType="Map" resultType="com.yunqi.jhf.vo.ShareBean">
+		SELECT 	s.id,
+				u.id suserId,
+				u.user_name suserName,
+				u.avatar,
+				s.category_id categoryId,
+				s.content_text contentText,
+				s.is_show isShow,
+				s.is_enabled isEnabled,
+				s.content_img_id ContentImage,
+				s.publish_address publishAddress,
+				s.publish_time publishTime
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_enabled="N"
+		<if test="cateId != null">
+			AND	 	s.category_id = #{cateId}
+		</if>
+		<if test="suserName != null">
+			AND	u.user_name like "%${suserName}%"
+		</if>
+		<if test="userId != null">
+			AND	u.id = #{userId}
+		</if>
+		ORDER BY s.publish_time DESC 
+		LIMIT #{page} , #{size}
+	</select>
+	
+	
+	<select id="getShareByNameOrCatePage" parameterType="Map" resultType="com.yunqi.jhf.vo.ShareBean">
+		SELECT 	s.id,
+				u.id suserId,
+				u.user_name suserName,
+				u.avatar,
+				s.category_id categoryId,
+				s.content_text contentText,
+				s.is_show isShow,
+				s.is_enabled isEnabled,
+				s.content_img_id ContentImage,
+				s.publish_address publishAddress,
+				s.publish_time publishTime
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_enabled="N"
+		<if test="cateId != null">
+			AND	 	s.category_id = #{cateId}
+		</if>
+		<if test="suserName != null">
+			AND	u.user_name like "%${suserName}%"
+		</if>
+		<if test="userId != null">
+			AND	u.id = #{userId}
+		</if>
+		ORDER BY s.publish_time DESC 
+		LIMIT #{page} , #{size}
+	</select>
+	
+	
+	
+	<!-- 根据 分享的分类id   分享用户 获取分享信息列表   总数-->
+	<select id="getShareByCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_enabled="N"
+		<if test="cateId != null">
+			AND	 	s.category_id = #{cateId}
+		</if>
+		<if test="suserName != null">
+			AND	u.user_name like "%${suserName}%"
+		</if>
+		<if test="userId != null">
+			AND	u.id = #{userId}
+		</if>
+	</select>
+	
+	
+	<!-- 不带分页全查-->
+	<select id="getIndexShareList" resultType="com.yunqi.jhf.vo.ShareBean">
+			SELECT 	s.id,
+				u.id suserId,
+				u.user_name suserName,
+				u.avatar,
+				s.category_id categoryId,
+				s.content_text contentText,
+				s.is_show isShow,
+				s.is_enabled isEnabled,
+				s.content_img_id ContentImage,
+				s.publish_address publishAddress,
+				s.publish_time publishTime
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_show="Y" AND s.is_enabled="N"
+		ORDER BY s.publish_time DESC 
+	</select>
+	
+	<!-- 根据shareId查询分享详情    -->
+	<select id="getShareOne" parameterType="int" resultType="com.yunqi.jhf.vo.ShareBean">
+		SELECT 	s.id,
+				u.id suserId,
+				u.user_name suserName,
+				u.avatar,
+				s.category_id categoryId,
+				s.content_text contentText,
+				s.is_show isShow,
+				s.is_enabled isEnabled,
+				s.content_img_id ContentImage,
+				s.publish_address publishAddress,
+				s.publish_time publishTime
+		FROM 	t_share s,t_user u 
+		WHERE	s.user_id = u.id AND s.id = #{shareId} AND s.is_enabled="N"
+	</select>
+	
+	
+	
+	
+	<!-- 全查带分页   分享用户 获取分享信息列表 -->
+	<select id="getShareAll" parameterType="Map" resultType="com.yunqi.jhf.vo.ShareBean">
+		SELECT 	s.id,
+				u.id suserId,
+				u.user_name suserName,
+				u.avatar,
+				s.category_id categoryId,
+				s.content_text contentText,
+				s.is_show isShow,
+				s.is_enabled isEnabled,
+				s.content_img_id ContentImage,
+				s.publish_address publishAddress,
+				s.publish_time publishTime
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_enabled="N"
+		ORDER BY s.publish_time DESC 
+		LIMIT #{page} , #{size}
+	</select>
+	<!-- 根据 分享的分类id   分享用户 获取分享信息列表   总数-->
+	<select id="getShareAllCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_share s,t_user u
+		WHERE	s.user_id = u.id AND s.is_enabled="N"
+		
+	</select>
+	
+</mapper>

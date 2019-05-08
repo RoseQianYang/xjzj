@@ -1,0 +1,218 @@
+#parse("/include/header.vm")
+<title>装备配件</title> 
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<script src="${ctxPath}/js/dropload.min.js"></script>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+<!--导航-->
+	<div class="row bg-color-fff divrelative">	  
+		<ul class="popnav-ul" style="width:88%">
+			<li><a href="${ctxPath}/shopping/shouYe.do">首页</a></li>
+			<li><a href="${ctxPath}/front/event/eventHotList.do">热卖</a></li>
+			  #foreach($prodcate in ${prodcatelist})
+				  <li><a #if($cateId == -1) class="active" #end href="${ctxPath}/front/product/productList.do?cateId=$!{prodcate.id}">$!{prodcate.title}</a></li>
+			  #end  
+		  </ul>
+		  <div class="popnav-btn"><img src="${ctxPath}/imgs/35-01.png"></div>
+		  <div class="popnav-showhide-box">
+			  <div class="popnav-showhide-msg">
+					<a href="${ctxPath}/shopping/shouYe.do">首页</a>
+					<a href="${ctxPath}/front/event/eventHotList.do">热卖</a>
+				#foreach($prodcate in ${prodcatelist})
+					<a href="${ctxPath}/front/product/productList.do?cateId=$!{prodcate.id}">$!{prodcate.title}</a>
+				#end  
+			  </div>
+		  </div>
+	 </div>	
+<!--排序-->
+	<div class="row bg-color-1e1e1e">	  
+		  <ul class="order-ul">
+			  <li>
+					<a 
+						#if($trueorfalse == -1) class="active" #end 
+						class="astyle3"
+						href="${ctxPath}/front/product/productList.do?page=1&cateId=$!{cateId}&brandId=$!{brandId}&productName=$!{productName}&eventId=$!{eventId}" 
+					>
+						综合排序
+					</a>
+				</li>
+			  <li class="active order-change-box">
+			  #if($trueorfalse == 1)
+				  <a 
+						href="${ctxPath}/front/product/productList.do?trueorfalse=0&cateId=$!{cateId}&brandId=$!{brandId}&productName=$!{productName}" 
+						class="astyle3 active">
+					  价格排序<img src="${ctxPath}/imgs/58-01.png" class="imgstyle1">
+				  </a>
+			  #elseif($trueorfalse == 0)
+				  <a 
+						href="${ctxPath}/front/product/productList.do?trueorfalse=1&cateId=$!{cateId}&brandId=$!{brandId}&productName=$!{productName}" 
+						class="astyle3 active">
+					  价格排序<img src="${ctxPath}/imgs/59-01.png" class="imgstyle1">
+				  </a>
+				#else
+				  <a 
+						href="${ctxPath}/front/product/productList.do?trueorfalse=1&cateId=$!{cateId}&brandId=$!{brandId}&productName=$!{productName}" 
+						class="astyle3">
+					  价格排序<img src="${ctxPath}/imgs/59-02.png" class="imgstyle1">
+				  </a>
+			  #end  
+			  </li>
+		  </ul>
+	 </div>	
+<!--排序END-->
+
+<!--列表-->
+	<div class="row text-center mtop10">	  
+		<div class="box-list-double box-list-double5">
+		#if ($productList.list.size()>0)
+			#foreach($product in $productList.list)
+				<div class="box-list-double-main"> 
+					 <a href="${ctxPath}/front/product/getProductDetil.do?productId=$!{product.id}&shareUserId=$userId">
+						 <div class="box-list-double-main-box boxlist-double1">
+							<p><img src="${strUtil.uploadPath($!{product.cover})}" class="height200" /></p>
+							<div class="boxlist-double1-msg">
+								<h5>$!{product.title}</h5>
+								<h5><em class="fontstyle7">￥${strUtil.rmb(${product.price})}</em></h5>
+							</div>	
+						 </div>
+					 </a>
+				 </div>
+			 #end
+			#else
+			<div class="mtop20 paddinglr10">
+				<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+			</div>
+		#end
+		</div>		
+	</div>	
+<!--列表END-->	
+</div>
+#parse("/include/backtop.vm")
+<script>
+function getQueryString(name) {
+	var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+	var r = window.location.search.substr(1).match(reg);
+	if (r != null) return unescape(r[2]); 
+	return null;
+}
+
+var currentPage = 1
+const cateId = "$!{cateId}"
+const trueorfalse = "$!{trueorfalse}"
+const userId = "$!{userId}"
+const brandId = getQueryString('brandId')
+const productName = "$!{productName}"
+const data = {}
+
+if (cateId && cateId != -1) {
+	data.cateId = parseInt(cateId,10)
+}
+
+if (trueorfalse && trueorfalse!=-1) {
+	data.trueorfalse = parseInt(trueorfalse,10)
+}
+
+if (brandId && brandId != -1) {
+	data.brandId = parseInt(brandId,10)
+}
+
+if (productName) {
+	data.title = productName
+}
+
+$('.container').dropload({
+	scrollArea: window,
+	loadDownFn: function (me) {
+		data.page = ++currentPage
+		$.ajax({
+			type: 'POST',
+			url: '${ctxPath}/front/product/getProductPageLists.do',
+			contentType: 'application/json',
+			dataType: 'json',
+			data: JSON.stringify(data),
+			success: function(res){
+				if (res.data.list.length > 0 ) {
+					var list = res.data.list
+					for(let i in list){
+						var cover = list[i].cover
+						var index = cover.lastIndexOf('.')
+						var imgType = cover.slice(index)
+						var price = list[i].price / 100
+
+						if (parseInt(price, 10) === price) {
+							price += '.00'
+						}
+
+						$('.box-list-double5').eq(0).append(
+							'<div class="box-list-double-main">' + 
+							'<a href="${ctxPath}/front/product/getProductDetil.do?productId=' + list[i].id + '&shareUserId=' + userId +'">' +
+							'<div class="box-list-double-main-box boxlist-double1">'+
+							'<p><img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_s' + imgType + '" class="height200" /></p>'+
+							'<div class="boxlist-double1-msg">'+
+							'<h5>'+list[i].title+'</h5>'+
+							'<h5><em class="fontstyle7">￥'+price+'</em></h5>'+
+							'</div>'+
+							'</div>'+
+							'</a>'+
+							'</div>'
+						)
+					}
+				} else {
+					me.lock();
+					me.noData();
+				}
+				me.resetload();
+			},
+			error: function(xhr, type){
+				me.resetload();
+				me.lock();
+				me.noData();
+			}
+		});
+	}
+})
+
+$(".popnav-btn").click(function() {
+	if ($(".popnav-showhide-box").is(":hidden")) {
+		$(".popnav-showhide-box").fadeIn("slow");
+		$(this).find("img").attr("src","${ctxPath}/imgs/35-02.png");
+		$(".opacity-boxstyle1").css("display","block");
+	} else {
+		$(".popnav-showhide-box").fadeOut("slow");
+		$(this).find("img").attr("src","${ctxPath}/imgs/35-01.png");
+		$(".opacity-boxstyle1").css("display","none");
+	}
+})
+
+$(window).scroll(function(event){
+	if ($(window).scrollTop() > 170) {
+		$(".popnav-showhide-box").fadeOut("slow");
+		$(".popnav-btn").find("img").attr("src","${ctxPath}/imgs/35-01.png");
+		$(".opacity-boxstyle1").css("display","none");
+	}
+});
+
+$(".popnav-ul a").each(function(){
+	var thisCateId = $(this).attr('href').slice(-5)
+
+	if (cateId === thisCateId) {
+		$(this).parent().addClass("active").siblings().removeClass("active");
+	}
+})
+
+$(".popnav-showhide-msg a").each(function(){ 	
+	var thisCateId = $(this).attr('href').slice(-5)
+
+	if (cateId === thisCateId) {
+		$(this).addClass("active").siblings().removeClass("active");
+	}
+})
+
+</script>
+
+</body>
+</html>

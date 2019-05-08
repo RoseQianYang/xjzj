@@ -1,0 +1,54 @@
+#parse("/include/header.vm")
+<title>品牌列表</title> 
+</head>
+
+<body class="bg-color-3c3c3c">
+<div class="container mb0">
+
+<!--品牌专区-->
+    <div class="row text-center">	  
+		<div class="box-list-three box-list-three7">
+			#if ($probrandlist.size()>0)
+				#foreach($product in $probrandlist)
+				 <div class="box-list-three-main">
+					 <div class="box-list-three-main-box">
+					 	<a href="${ctxPath}/front/product/productBrandList.do?brandId=$!{product.id}">
+					 	<p><img src="${strUtil.uploadPath($!{product.cover})}" class="height100" /></p>
+						<h5>${strUtil.safeHtml(${strUtil.left($!{product.title},8)})}</h5>
+						</a>
+						
+					 </div>
+				 </div>
+				#end
+				
+		     	<!-- <div class="pagination-box">
+					#set($add=$probrandlist.currentPage + 1)
+					#set($minus=$probrandlist.currentPage - 1)
+					<p>
+						总共有$!{probrandlist.totalSize}条数据 &nbsp;&nbsp;
+						$!{probrandlist.currentPage}/$!{probrandlist.totalPage}页
+					</p>
+					#if ($probrandlist.currentPage > 1)		
+						<a href="${ctxPath}/productbrand/productBrandList.do?page=1" class="btn btn-primary">首页</a>
+						<a href="${ctxPath}/productbrand/productBrandList.do?page=$!{minus}" class="btn btn-default">上一页</a>
+					#end
+					#if ($probrandlist.currentPage < $probrandlist.totalPage)
+						<a href="${ctxPath}/productbrand/productBrandList.do?page=$!{add}" class="btn btn-default">下一页</a>
+					#end
+					
+					
+					<a href="${ctxPath}/productbrand/productBrandList.do?page=$!{probrandlist.totalPage}" class="btn btn-primary">尾页</a>
+				</div> -->
+			#else
+		<div class="mtop20 paddinglr10">
+			<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+		</div>
+	#end
+		</div>			
+    </div>	
+<!--品牌专区END-->
+	<div class="opacity-boxstyle1"></div>
+</div>
+#parse("/include/backtop.vm")
+</body>
+</html>

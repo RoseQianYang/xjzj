@@ -1,0 +1,7 @@
+.ant-tabs.ant-tabs-card > .ant-tabs-bar .ant-tabs-tab {
+  background: #f2f6fa;
+}
+
+.jhf-tabs-bar.ant-tabs .ant-tabs-nav .ant-tabs-tab-active {
+  background: #fff;
+}

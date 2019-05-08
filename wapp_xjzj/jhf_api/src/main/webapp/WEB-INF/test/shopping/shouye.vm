@@ -1,0 +1,275 @@
+#parse("/include/header.vm")
+<title>小金优品</title> 
+<style>
+  .popnav-ul li{
+		padding: 9px 12px;
+    margin: 0 2px;
+	}
+
+	h5 {
+		overflow: hidden;
+		text-overflow:ellipsis;
+		white-space: nowrap;
+	}
+</style>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container mb0">
+
+	<div class="row">	  
+		 <div class="searchbox1">
+			<div class="input-group">
+			  <input 
+					type="text" 
+					class="form-control input-no-border2" 
+					placeholder="搜索服装/配件" 
+					id="searchproinput">
+			  <span class="input-group-btn">
+				<button class="btn btn-default input-no-border2" type="button" id="searchpro"><span class="glyphicon glyphicon-search" aria-hidden="true"></span></button>
+			  </span>
+			</div>
+		 </div>	
+	 </div>	
+
+	 <div class="row bg-color-fff divrelative">	  
+		  <ul class="popnav-ul" style="width:88%">
+		  	  <li class="active">首页</li>
+<!-- 		  	  <li><a href="${ctxPath}/front/event/eventHotList.do">热卖</a></li>
+ -->			  #foreach($prodcate in ${prodcatelist})
+				   <li><a href="${ctxPath}/front/product/productList.do?cateId=$!{prodcate.id}">$!{prodcate.title}</a></li>
+			  #end  
+		  </ul>
+		  <div class="popnav-btn"><img src="${ctxPath}/imgs/35-01.png"></div>
+		  <div class="popnav-showhide-box">
+			  <div class="popnav-showhide-msg">
+					<a class="active">首页</a>
+					<a href="${ctxPath}/front/event/eventHotList.do">热卖</a>
+				#foreach($prodcate in ${prodcatelist})
+					<a href="${ctxPath}/front/product/productList.do?cateId=$!{prodcate.id}">$!{prodcate.title}</a>
+				#end  
+			  </div>
+		  </div>
+	 </div>	
+	 
+<!--户外服饰专区-->	 
+<div class="row text-center">	
+	<a href="#" class="fristImgjs"><img src="${strUtil.uploadPath(${fristImg})}" class="img"/></a>
+	<div class="mar10">
+	#if ($fristpro.size()>0)
+	<div class="swiper-container swiper1">
+		<div class="swiper-wrapper">				
+			#foreach($product in $fristpro)
+			 #set($cateid1 = $!{product.cateId}) 
+			<!--  #set($Price1 = ${product.price} / 100)  -->
+			<div class="swiper-slide swiper-slide-boxlist-three">
+				 <a 
+				 	href="${ctxPath}/front/product/getProductDetil.do?productId=$!{product.id}&shareUserId=$userId" 
+					class="fristImg" 
+					style="width:100%"
+					pid="$!{cateid1}">
+					 <div class="boxlist-three1">
+						<p class="mtop10">
+							<img src="${strUtil.uploadPath($!{product.cover})}" class="height100" />
+						</p>
+						<div class="boxlist-three1-msg">
+							<h5>${strUtil.safeHtml(${strUtil.left($!{product.title},7)})}</h5>  
+							#if($!Price1)<h5 class="fontstyle1">￥${strUtil.rmb(${product.price})}</h5>#end
+						</div>	
+					 </div>
+				 </a>	 
+			</div>	
+			#end
+			<div class="swiper-slide swiper-slide-boxlist-three" style="width:50px;">
+				 <a href="${ctxPath}/front/product/productList.do?cateId=${cateid1}" class="boxlist-three-a">
+					 <div class="boxlist-three1">
+						<div class="boxstyle3">
+							<h6>查看更多</h6>  
+							<img src="${ctxPath}/imgs/36-01.png">
+						</div>	
+					 </div>
+				 </a>	 
+			</div>	
+		</div>
+	</div>
+	#end	
+	</div>
+</div>
+<!--户外服饰专区END-->	
+<!--户外工具专区-->		
+#if ($tpro.size()>0) 
+	 <div class="row text-center">	
+		<a href="#" class="secondImgjs"><img src="${strUtil.uploadPath(${secondImg})}" class="img"/>	</a>
+		<div class="mar10">
+		<div class="swiper-container swiper2">
+			<div class="swiper-wrapper">			
+				#foreach($product in $tpro)	
+				#set($cateid2 = $!{product.cateId}) 
+				<!-- #set($Price2 = ${product.price} / 100)  -->
+				<div class="swiper-slide swiper-slide-boxlist-three">
+					 <a style="    width: 100%;
+    display: block;"	href="${ctxPath}/front/product/getProductDetil.do?productId=$!{product.id}&shareUserId=$userId" class="secondImg" pid="$!{cateid2}">
+						 <div class="boxlist-three1">
+							<p class="mtop10"><img src="${strUtil.uploadPath($!{product.cover})}" class="height100" /></p>
+							<div class="boxlist-three1-msg">
+								<h5>${strUtil.safeHtml($!{product.title})}</h5>  
+								<h5 class="fontstyle1">￥${strUtil.rmb(${product.price})}</h5>
+							</div>	
+						 </div>
+					 </a>	 
+				</div>	
+				#end
+				<div class="swiper-slide swiper-slide-boxlist-three" style="width:50px;">
+					 <a href="${ctxPath}/front/product/productList.do?cateId=${cateid2}" class="boxlist-three-a">
+						 <div class="boxlist-three1">
+							<div class="boxstyle3">
+								<h6>查看更多</h6>  
+								<img src="${ctxPath}/imgs/36-01.png">
+							</div>	
+						 </div>
+					 </a>	 
+				</div>						
+			</div>
+		</div>
+	</div></div>
+#end		
+<!--户外工具专区END-->	
+<!--九大爆款-->
+<!-- #if ($eventprodList.size()>0)
+    <div class="row bg-color-ff5000 text-center">	  
+		<img src="${ctxPath}/imgs/sbg1.png" class="mesimg-style1"  style="margin: 6px 0;width: 40%;"/>
+		<div class="box-list-three box-list-three2">	 	
+			#foreach($product in $eventprodList)
+
+			 <div class="box-list-three-main"> 
+				 <a href="${ctxPath}/front/product/getProductDetil.do?productId=$!{product.productId}&eventprodId=$!{product.id}&shareUserId=$userId">
+					 <div class="box-list-three-main-box boxlist-three1">
+						<p>
+							<img src="${strUtil.uploadPath($!{product.cover})}" class="height100" />
+						</p>
+						<div class="boxlist-three1-msg">
+							<h5>${strUtil.safeHtml($!{product.title})}</h5>  
+							<em class="fontstyle23 line1">原价：￥${strUtil.rmb(${product.productPrice})}</em>
+							<em class="fontstyle1"> ￥${strUtil.rmb(${product.eventPrice})}</em>
+						</div>	
+					 </div>
+				 </a>
+			 </div>
+			#end
+		</div>			
+    </div>	
+#end     -->
+<!--九大爆款END-->
+<!--品牌专区-->
+#if ($prodBrandList.size()>0)
+    <div class="row bg-color-3c3c3c text-center">	  
+		<p class="bg-color-1e1e1e mb0"><img src="${ctxPath}/imgs/111.png" class="mesimg-style1" /></p>
+		<div class="box-list-three box-list-three7">			
+			#foreach($product in $prodBrandList)
+			<a href="${ctxPath}/front/product/productBrandList.do?brandId=$!{product.id}">
+			 <div class="box-list-three-main">
+				 <div class="box-list-three-main-box">
+					<p><img src="${strUtil.uploadPath($!{product.cover})}"/></p>
+					<h5>${strUtil.safeHtml(${product.title})}</h5>
+				 </div>
+			 </div>
+			  </a>	
+			#end					 
+			 <div class="box-list-three-main">
+				 <div class="box-list-three-main-box bg-color-fec917">
+					 <a href="${ctxPath}/productbrand/productBrandList.do">
+						<p class="box-list-three-main-box-more" style="height: 75px;">更多品牌</p>
+						<div class="ptop5-pbottom-15">
+							<i class="fa fa-chevron-right" aria-hidden="true"></i>
+						</div>	
+					 </a>	
+				 </div>
+			 </div>
+		</div>			
+    </div>	
+ #end   
+<!--品牌专区END-->
+	<div class="opacity-boxstyle1"></div>
+</div>
+	  
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+		<img src="${ctxPath}/imgs/loading.gif"/>
+    </div>
+  </div>
+</div>
+
+<div class="footer-hei2"></div>
+<div class="fixed-btn1e1e1e-box">
+	<div class="col-xs-12 col-md-12">
+		<div class="col-xs-4 col-md-4">
+			<a href="${ctxPath}/wechatIndex.do" class="bottom-nav">
+				<img src="${ctxPath}/imgs/19-01.png"/>
+				<em class="bottom-nav-em">首页</em>
+			</a>
+		</div>
+		<div class="col-xs-4 col-md-4">
+			<a href="${ctxPath}/shopping/shouYe.do" class="bottom-nav active">
+				<img src="${ctxPath}/imgs/20-01.png"/>
+				<em class="bottom-nav-em">商城</em>
+			</a>
+		</div>
+		<div class="col-xs-4 col-md-4">
+			<a href="${ctxPath}/usercenter/userCenterList.do" class="bottom-nav">
+				<img src="${ctxPath}/imgs/25-01.png"/>
+				<em class="bottom-nav-em">我的</em>
+			</a>
+		</div>
+	</div>
+</div>
+
+</div>
+<script> 
+$(function(){ 
+	var fristImgjs = $(".fristImg").attr("pid");
+	$(".fristImgjs").attr("href","${ctxPath}/front/product/productList.do?cateId="+fristImgjs);
+	var secondImgjs = $(".secondImg").attr("pid");
+	$(".secondImgjs").attr("href","${ctxPath}/front/product/productList.do?cateId="+secondImgjs);
+});
+
+var swiper = new Swiper('.swiper1', {  
+	initialSlide : 0,
+	slidesPerView: 'auto',
+	paginationClickable: true,
+	spaceBetween: 10,
+	freeMode: true
+});	
+var swiper = new Swiper('.swiper2', {  
+	initialSlide : 0,
+	slidesPerView: 'auto',
+	paginationClickable: true,
+	spaceBetween: 10,
+	freeMode: true
+});	
+$(".popnav-btn").click(function(){
+	if($(".popnav-showhide-box").is(":hidden")){  
+		$(".popnav-showhide-box").fadeIn("slow");
+        $(this).find("img").attr("src","${ctxPath}/imgs/35-02.png");
+		$(".opacity-boxstyle1").css("display","block");
+	}else{
+		$(".popnav-showhide-box").fadeOut("slow");
+        $(this).find("img").attr("src","${ctxPath}/imgs/35-01.png");
+		$(".opacity-boxstyle1").css("display","none");
+	}
+})	
+$(window).scroll(function(event){
+    if($(window).scrollTop() > 170){
+		$(".popnav-showhide-box").fadeOut("slow");
+        $(".popnav-btn").find("img").attr("src","${ctxPath}/imgs/35-01.png");
+		$(".opacity-boxstyle1").css("display","none");
+	}
+});
+$("#searchpro").click(function(){
+	window.location.href= "${ctxPath}/front/product/productList.do?productName="+$("#searchproinput").val();
+})	
+
+</script>
+
+</body>
+</html>

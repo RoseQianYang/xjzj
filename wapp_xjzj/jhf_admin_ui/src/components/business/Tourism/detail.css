@@ -1,0 +1,17 @@
+#tourismDetail .imgGrid {
+  width: 132px;
+  height: 132px;
+  text-align: center;
+  border: none;
+  box-shadow: none;
+  padding: 6px;
+}
+
+#tourismDetail .ant-card-head-wrapper {
+  height: 48px;
+}
+
+#tourismDetail .ant-card-head-title {
+  padding: 10px 0;
+  line-height: 30px;
+}

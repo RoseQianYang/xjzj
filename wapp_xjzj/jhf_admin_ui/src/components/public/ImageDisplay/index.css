@@ -1,0 +1,8 @@
+#imgDisplay .imgRemove{
+  display: inline-block;
+  width: 100%;
+}
+
+#imgDisplay .imgRemove:hover {
+  box-shadow: 1px 1px 4px rgba(0,0,0,.2);
+}

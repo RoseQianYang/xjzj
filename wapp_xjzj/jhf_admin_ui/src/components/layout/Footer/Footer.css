@@ -1,0 +1,25 @@
+.jg-footer {
+  margin: 24px 0;
+  text-align: center;
+  color: rgba(0, 0, 0, 0.45);
+  background-color: transparent;
+}
+
+.jg-footer .ant-row {
+  margin-bottom: 8px;
+}
+
+.jg-footer .ant-row span {
+  font-size: 14px;
+  margin: 0 20px;
+  transition: all .3s;
+  cursor: pointer;
+}
+
+.jg-footer .ant-row span:hover {
+  color: rgba(0, 0, 0, 0.65);
+}
+
+.jg-footer .ant-row .jg-footer-copyright {
+  font-size: 14px;
+}

@@ -1,0 +1,90 @@
+#parse("/include/header.vm")
+<title>露营线路</title> 
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<style>
+	
+</style>
+<script src="${ctxPath}/js/dropload.min.js"></script>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+	 <div class="row mtop20 text-center" id="list-container">
+	 #if ($mobileList.list.size()>0)	
+		#foreach($mobile in $mobileList.list)
+			<div class="col-xs-12 col-md-12">	
+				<a href="${ctxPath}/front/mobileroute/mobileDetailList.do?mobilerouteId=$!{mobile.id}">
+					<div class="img-radius-list-box">
+						<img src="${strUtil.uploadPath($!{mobile.cover})}" class="img-radius5"/>
+						<div class="img-radius-list-box-opacity"></div>					
+						<h5 class="img-radius-opacity-title">${strUtil.safeHtml(${strUtil.left($!{mobile.title},32)})}</h5>
+					</div>					
+				</a>
+			</div>
+		 #end
+     	
+	#end			 
+    </div>
+	
+</div>
+<script>
+$(document).ready(function(){
+	var currentPage = 1
+	var data = {}
+
+	$('.container').dropload({
+		scrollArea: window,
+		loadDownFn: function(me){
+
+			data.page = ++currentPage
+
+			$.ajax({
+				type: 'POST',
+				url: '${ctxPath}/front/mobileroute/getMobilePageList.do',
+				contentType: 'application/json',
+				dataType: 'json',
+				data: JSON.stringify(data),
+				success: function(res){
+					if (res.data.list.length > 0 ) {
+						var list = res.data.list
+						for (let i in list) {
+							var cover = list[i].cover
+							var index = cover.lastIndexOf('.')
+							var imgType = cover.slice(index)
+
+							$('#list-container').append(
+								'<div class="col-xs-12 col-md-12">' +
+								'<a href="${ctxPath}/front/mobileroute/mobileDetailList.do?mobilerouteId='+list[i].id+'">' +
+								'<div class="img-radius-list-box">'+
+								'<img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_s' + imgType + '" class="img-radius5"/>'+
+								'<div class="img-radius-list-box-opacity"></div>'+
+								'<h5 class="img-radius-opacity-title">'+list[i].title+'</h5>'+
+								'</div>' +
+								'</a>'+
+								'</div>'
+							)
+						}
+					} else {
+						me.lock();
+						me.noData();
+					}
+					me.resetload();
+				},
+				error: function(xhr, type){
+					me.resetload();
+					me.lock();
+					me.noData();
+				}
+			});
+		}
+	})
+})
+</script>
+#parse("/include/backtop.vm")
+#parse("/include/footer.vm")
+
+
+</body>
+</html>

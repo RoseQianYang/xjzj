@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.ProductAttributeDao" >    
+<!-- 获取活动信息列表 -->
+	<select id="getProductAttribute" parameterType="Map" resultType="com.yunqi.jhf.vo.ProductAttributeBean">
+		SELECT  p.id id,
+				p.image_id imageId,
+				p.title title,
+				p.cover cover,
+				p.price price,
+				p.description description,
+				p.content content,
+				p.create_time createTime,
+				pa.stock stock,
+				pa.product_color productColor,
+				pa.product_size productSize	                         		
+		FROM 
+				t_product p,t_product_attribute pa
+		WHERE p.id=pa.product_id AND p.id=#{pId};
+	</select>
+
+
+</mapper>

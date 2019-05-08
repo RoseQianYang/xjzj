@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yunqi.jhf.dao.FriendDao">
+
+	<!-- <select id="getFriendList" parameterType="Map" resultType="com.yunqi.jhf.vo.FriendBean"> 
+		SELECT f.id id, u.id userId, f.friend_id friendId, u.create_time createTime, 
+		u.user_name friendName, u.avatar friendImg FROM t_friend f,t_user u WHERE 
+		f.friend_id=u.id AND f.friend_id=#{friendId}; </select> -->
+	<select id="getFriendList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.FriendBean">
+
+		SELECT f.id id,
+		f.user_id userId,
+		tu.user_name userName,
+		tu.avatar avatar,
+		f.friend_id friendId,
+		u.user_name friendName,
+		u.avatar
+		friendAvatar ,
+		u.create_time createTime,
+		"2" lv
+		FROM t_friend f,
+		t_user u,
+		t_user tu
+		WHERE u.id=f.friend_id
+		AND f.user_id = tu.id
+		AND f.user_id =
+		#{userId}
+		UNION ALL
+		SELECT d.id,
+		d.user_id,
+		u.user_name,
+		u.avatar,
+		tf.friend_id,
+		tu.user_name,
+		tu.avatar,
+		tu.create_time ,
+		"3" lv
+		FROM
+		t_friend d,
+		t_friend tf,
+		t_user tu,
+		t_user u
+		WHERE d.friend_id=tf.user_id
+		AND tf.friend_id = tu.id
+		AND d.user_id = u.id
+		AND d.user_id = #{userId}
+
+
+	</select>
+
+
+	<!-- 根据当前 friendId 查询到 对应的 2级和1级 -->
+	<select id="getUserByFriendId" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.FriendUserBean">
+
+		SELECT
+		u2.id userIdTwo,
+		u2.user_name friendNameTwo,
+		u1.id userIdOne,
+		u1.user_name friendNameOne
+		FROM t_friend f1,t_user u1,t_friend f2,t_user u2
+		WHERE f1.user_id = u1.id
+		AND f2.user_id = u2.id
+		AND f1.friend_id = f2.user_id
+		AND f2.friend_id = #{friendId}
+
+	</select>
+
+
+
+
+</mapper>

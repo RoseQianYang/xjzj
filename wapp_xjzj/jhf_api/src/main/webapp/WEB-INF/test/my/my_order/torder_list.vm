@@ -1,0 +1,324 @@
+#parse("/include/header.vm")
+<title>我的订单</title> 
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+ <div class="row bg-color-fff">	  
+		  <ul class="popnav-ul ulstyle1">
+			  <li #if($ostatus == -1) class="active" #end><a href="${ctxPath}/front/order/orderList.do">全部订单</a></li>
+			  <li #if($ostatus == 1) class="active" #end><a href="${ctxPath}/front/order/orderList.do?status=1">待付款</a></li>
+			  <li #if($ostatus == 3) class="active" #end><a href="${ctxPath}/front/order/orderList.do?status=3">待发货</a></li>
+			  <li #if($ostatus == 4) class="active" #end><a href="${ctxPath}/front/order/orderList.do?status=4">待收货</a></li>
+		  </ul>
+	 </div>
+	<div class="row mtop10">
+	#if ($orderList.size()>0)
+		#foreach($orderbean in $orderList)
+			<div class="box-list-bg-f0f0f0 padding0">			
+				<p class="font-time-style1">订单编号：$!{orderbean.orderNo}
+					<em class="fontstyle19">
+					<em class="fontstyle19">
+        #if($!{orderbean.orderStatus} == 1)未支付
+			  #elseif($!{orderbean.orderStatus} == 2)支付取消
+				#elseif($!{orderbean.orderStatus} == 3)已支付，等待发货
+				#elseif($!{orderbean.orderStatus} == 4)已发货，等待收货
+				#elseif($!{orderbean.orderStatus} == 5)已收货，交易成功
+				#elseif($!{orderbean.orderStatus} == 6)订单超时，默认收货
+        #else 订单错误
+			  #end  
+      </em>
+
+					</em>
+				</p>
+				#foreach($orderdetailbean in ${orderdetailList})
+					#if( $!{orderbean.id}==$!{orderdetailbean.orderId})
+					#set($Integer = 0)
+					<!-- #set($price = $Integer.parseInt(${orderdetailbean.productPrice}) * $!{orderdetailbean.productCount}) -->
+					<a href="${ctxPath}/front/order/orderDetailList.do?orderId=$!{orderdetailbean.orderId}">	
+						<div class="boxlist-style-border">
+							<div class="col-xs-4 col-md-4"><img src="${strUtil.uploadPath($!{orderdetailbean.productCover})}"/></div>
+							<div class="col-xs-8 col-md-8">
+								<p class="fsize16-fw700 p-mb5 line1">$!{orderdetailbean.productTitle}</p>
+								<p class="fsize14-color787878 p-mb5">
+								#if(${orderdetailbean.productSize} == "")
+				        #else<span class="mr10">$!{orderdetailbean.productSize}</span>
+				        #end
+                $!{orderdetailbean.productColor}</p>
+								<p class="boximg-list-double-rb mt40">
+									<em class="pull-left">￥${strUtil.rmb(${orderdetailbean.productPrice})}</em>
+									<em class="pull-right fsize14-color5a5a5a">x$!{orderdetailbean.productCount}</em>
+									<em class="f-clear"></em>
+								</p>
+							</div>
+							<em class="f-clear"></em>
+						</div>
+					</a>
+					#end
+			    #end				
+				
+        #if($!{orderbean.orderStatus} == 1)
+        <div class="boxlist-style1">
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<a href="${ctxPath}/pay.do?orderId=$!{orderbean.id}" orderId=$!{orderbean.id} class="btn btnstyle3 zfdd">确认支付</a>
+					<button class="btn btnstyle2 qxdd" orderId=$!{orderbean.id} >取消订单</button>					
+					<em class="f-clear"></em>
+				</div>
+			  #elseif($!{orderbean.orderStatus} == 2)
+			  <div class="boxlist-style1">				
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<a href="${ctxPath}/front/order/orderDetailList.do?orderId=$!{orderbean.id}" class="btn btnstyle3">查看详情</a>
+					<button class="btn btnstyle2 scdd" orderId=$!{orderbean.id} >删除订单</button>										
+					<em class="f-clear"></em>
+				</div>
+				#elseif($!{orderbean.orderStatus} == 3)
+				<div class="boxlist-style1">				
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<a href="${ctxPath}/front/order/orderDetailList.do?orderId=$!{orderbean.id}" class="btn btnstyle2">查看详情</a>
+					<em class="f-clear"></em>
+				</div>
+				#elseif($!{orderbean.orderStatus} == 4)
+				<div class="boxlist-style1">				
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<button class="btn btnstyle3 qrsh" orderId=$!{orderbean.id}>确认收货</button>
+					<a href="https://m.kuaidi100.com/index_all.html?type=$!{orderbean.logisticsName}&postid=$!{orderbean.logisticsNo}&callbackurl=http://www.jhffcly.com/jhf/front/order/orderDetailList.do?orderId=$!{orderbean.id}" class="btn btnstyle2">查看物流</a>
+					<em class="f-clear"></em>
+				</div>
+				#elseif($!{orderbean.orderStatus} == 5)
+				<div class="boxlist-style1">				
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<a href="${ctxPath}/front/order/orderDetailList.do?orderId=$!{orderbean.id}" class="btn btnstyle2">查看详情</a>
+					<em class="f-clear"></em>
+				</div>
+				#elseif($!{orderbean.orderStatus} == 6)
+				<div class="boxlist-style1">				
+					<div class="stylebox3">合计：<em class="font-color-ff5000">￥${strUtil.rmb($!{orderbean.orderTotalPrice})}</em></div>
+					<a href="${ctxPath}/front/order/orderDetailList.do?orderId=$!{orderbean.id}" class="btn btnstyle2">查看详情</a>
+					<em class="f-clear"></em>
+				</div>
+        #else 订单错误
+			  #end  
+
+				
+			</div>		
+		#end
+		##if ($orderList.totalPage > 1)
+			##<div class="pagination-box">
+				##set($add=$orderList.currentPage + 1)
+				##set($minus=$orderList.currentPage - 1)
+				##<p>
+					##总共有$!{orderList.totalSize}条数据 &nbsp;&nbsp;
+					##$!{orderList.currentPage}/$!{orderList.totalPage}页
+				##</p>
+				##if ($orderList.currentPage > 1)		
+				##	<a href="${ctxPath}/front/order/orderList.do?page=1" class="btn btn-primary">首页</a>
+				##	<a href="${ctxPath}/front/order/orderList.do?page=$!{minus}" class="btn btn-default">上一页</a>
+				##end
+				##if ($orderList.currentPage < $orderList.totalPage)
+				##	<a href="${ctxPath}/front/order/orderList.do?page=$!{add}" class="btn btn-default">下一页</a>
+				##end
+				
+				##if ($orderList.currentPage > 1)	
+				## <a href="${ctxPath}/front/order/orderList.do?page=$!{orderList.totalPage}" class="btn btn-primary">尾页</a>
+				##end
+			##</div>
+			##end		
+		#else
+			<div class="mtop20 paddinglr10">
+				<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+			</div>
+		#end
+    </div>
+	
+</div>
+#parse("/include/backtop.vm")
+#parse("/include/footer.vm")
+<div class="modal fade"
+     id="confirm"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text">确认取消该订单吗？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-danger" id="confirmdelbtn">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade"
+     id="confirm2"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text">确认删除该订单吗？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-danger" id="confirmdelbtn2">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<div class="modal fade"
+     id="myModalDelete"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p class="modal-text"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+<script>
+// 取消订单
+$(".qxdd").click(function(){
+	if(!$(this).attr("orderId")){
+		return;
+	}else{
+		orderId = $(this).attr("orderId");
+		$('#confirm').modal('show');
+
+	}
+})	
+
+$("#confirmdelbtn").click(function(){
+	$.ajax({
+		url: '${ctxPath}/front/order/cancelOrder.do',
+		method: 'post',
+		data: {
+			orderId:orderId,
+			orderStatus:1
+		},
+		success: function (result) {
+			$('#confirm').modal('hide');
+			$(".modal-text").text('订单取消成功')
+			$('#myModalDelete').modal('show').on('hidden.bs.modal', function () {				
+				if (result.code === 0) {
+					window.location.reload();				
+				} else {
+					return false
+				}				
+			})
+		}
+	})
+})	
+// 删除订单
+$(".scdd").click(function(){
+	if(!$(this).attr("orderId")){
+		return;
+	}else{
+		orderId = $(this).attr("orderId");
+		$('#confirm2').modal('show');
+	}
+})	
+
+$("#confirmdelbtn2").click(function(){
+	$.ajax({
+		url: '${ctxPath}/front/order/delectOrder.do',
+		method: 'post',
+		data: {
+			orderId:orderId,
+			orderStatus:2
+		},
+		success: function (result) {
+			$('#confirm2').modal('hide');
+			$(".modal-text").text('订单删除成功')
+			$('#myModalDelete').modal('show').on('hidden.bs.modal', function () {				
+				if (result.code === 0) {
+					window.location.reload();				
+				} else {
+					return false
+				}				
+			})
+		}
+	})
+})	
+// 支付订单
+$(".zfdd").click(function(){
+	orderId = $(this).attr("orderId");
+	$.ajax({
+		url: '${ctxPath}/pay.do',
+		method: 'post',
+		data: {
+			orderId:orderId,
+			//orderStatus:5
+		},
+		success: function (result) {			
+			if (result.code === 0) {
+					return true		
+				} else {
+					return false
+				}
+		}
+	})
+})	
+
+// 确认收货
+$(".qrsh").click(function(){
+	if(!$(this).attr("orderId")){
+		return;
+	}else{
+		orderId = $(this).attr("orderId");
+		$.ajax({
+		url: '${ctxPath}/front/order/sumitOrder.do',
+		method: 'post',
+		data: {
+			orderId:orderId,
+			orderStatus:4
+		},
+		success: function (result) {			
+			$('.modal-text').html('确认收货成功');	
+			$('#myModalDelete').modal('show').on('hidden.bs.modal', function () {			 
+				if (result.code === 0) {							
+					window.location.reload();				
+				} else {
+					return false
+				}				
+			})
+		}
+	})
+	}
+	
+})	
+
+</script>
+
+</body>
+</html>
+
+
+
+

@@ -1,0 +1,127 @@
+#parse("/include/header.vm")
+<title>房车品鉴</title> 
+
+<style>
+
+h4 {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+</style>
+
+</head>
+
+<body>
+<div class="container mb0">
+<!--实体展示-->
+  <div class="row bg-color-106dcd text-center">	  
+		<p><img src="${ctxPath}/imgs/123.png" class="mesimg-style1" /></p>
+		<div class="box-list-double">
+			#foreach($vehicle1 in  ${twoVehicleLists})
+			 <div class="box-list-double-main">
+				 <div class="box-list-double-main-box">	 
+					 <a href="${ctxPath}/vehicle/enjoy/vehicleDetailList.do?vehicleId=${vehicle1.id}">
+						<p><img src="${strUtil.uploadPath($!{vehicle1.cover})}" class="height200" /></p>
+						<div class="ptop5-pbottom-15">
+							<h4>
+								<strong>${strUtil.safeHtml($!{vehicle1.vehicleName})}</strong>
+							</h4>
+							<h5>$!{vehicle1.spec}/准驾$!{vehicle1.license}照/床位X$!{vehicle1.bedNum}</h5>
+						</div>	
+					 </a>	
+				 </div>
+			 </div>
+			 #end
+		</div>	
+		<div class="f-clear"></div>
+		<a href="${ctxPath}/vehicle/enjoy/TVehicleListAction.do?status=1" class="radius-box-btn button-color-e8f1fa">更多
+			<i class="fa fa-chevron-right icon-color-106dcd" aria-hidden="true"></i>
+		</a>		
+    </div>	
+<!--实体展示END-->	
+<!--当季促销-->
+    <div class="row bg-color-ff5001 text-center">	  
+		<p><img src="${ctxPath}/imgs/321.png" class="mesimg-style1" /></p>
+		<div class="box-list-double">
+			#foreach($vehicle2 in ${twoVehicleListsYesIsSales})
+			 <div class="box-list-double-main">
+				 <div class="box-list-double-main-box">
+					 <a href="${ctxPath}/vehicle/enjoy/vehicleDetailList.do?vehicleId=${vehicle2.id}">
+						<p><img src="${strUtil.uploadPath($!{vehicle2.cover})}"  class="height200" /></p>
+						<div class="ptop5-pbottom-15">
+							<h4>
+								<strong>${strUtil.safeHtml($!{vehicle2.vehicleName})}</strong>
+							</h4>
+							<h5>$!{vehicle2.spec}/准驾$!{vehicle2.license}照/床位X$!{vehicle2.bedNum}</h5>
+						</div>	
+					 </a>	
+				 </div>
+			 </div>
+			 #end
+		</div>	
+		<div class="f-clear"></div>
+		<a href="${ctxPath}/vehicle/enjoy/TVehicleListAction.do?status=2" class="radius-box-btn button-color-e8f1fa">更多
+			<i class="fa fa-chevron-right icon-color-ff5001" aria-hidden="true"></i>
+		</a>		
+  </div>	
+<!--当季促销END-->
+<!--二手置换-->
+    <div class="row bg-color-3a9bfc text-center">	  
+		<p><img src="${ctxPath}/imgs/222.png" class="mesimg-style1" /></p>
+		<div class="box-list-double">
+			#foreach($vehicle3 in  ${twoVehicleListsYesIsSencond})
+			 <div class="box-list-double-main">
+				 <div class="box-list-double-main-box">
+					<a href="${ctxPath}/vehicle/enjoy/vehicleDetailList.do?vehicleId=${vehicle3.id}">
+						<p><img src="${strUtil.uploadPath($!{vehicle3.cover})}"  class="height200" /></p>
+						<div class="ptop5-pbottom-15">
+							<h4>
+								<strong>${strUtil.safeHtml($!{vehicle3.vehicleName})}</strong>
+							</h4>
+							<h5>$!{vehicle3.spec}/准驾$!{vehicle3.license}照/床位X$!{vehicle3.bedNum}</h5>
+						</div>	
+					</a>
+				 </div>
+			 </div>
+			 #end
+		</div>	
+		<div class="f-clear"></div>
+		<a href="${ctxPath}/vehicle/enjoy/TVehicleListAction.do?status=3" class="radius-box-btn button-color-e8f1fa">更多
+			<i class="fa fa-chevron-right icon-color-3a9bfc" aria-hidden="true"></i>
+		</a>		
+    </div>	
+<!--二手置换END-->
+
+<!--品牌专区-->
+    <div class="row bg-color-3c3c3c text-center">	  
+		<p class="bg-color-1e1e1e mb0"><img src="${ctxPath}/imgs/111.png" class="mesimg-style1" /></p>
+		<div class="box-list-three box-list-three7">
+			 #foreach($vehicle4 in  ${fiveVehicleBrandList})
+			 <div class="box-list-three-main">
+				 <div class="box-list-three-main-box">
+				 	<a href="${ctxPath}/vehicle/enjoy/TVehicleListAction.do?vehicleBrandId=$!{vehicle4.id}">
+						<p><img src="${strUtil.uploadPath($!{vehicle4.cover})}" class="height100" /></p>
+						<h5><strong>$!{vehicle4.brandName}</strong></h5>
+					</a>
+				 </div>
+			 </div>
+			#end
+			 <div class="box-list-three-main">
+				 <div class="box-list-three-main-box bg-color-fec917">
+				 	<a href="${ctxPath}/vehicle/enjoy/TVehicleBrandAction.do">
+						<p class="box-list-three-main-box-more" style="height: 75px;">更多品牌</p>
+						<div class="ptop5-pbottom-15">
+							<i class="fa fa-chevron-right icon-fsize24" aria-hidden="true"></i>
+						</div>	
+					</a>
+				 </div>
+			 </div>
+		</div>			
+    </div>	
+<!--品牌专区END-->
+</div>
+#parse("/include/footer.vm")
+</body>
+</html>

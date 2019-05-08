@@ -1,0 +1,157 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.EventProductDao" >    
+
+	<!-- 获取活动信息列表 -->
+	<select id="getEventProductList" parameterType="Map" resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT 	e.id,
+				p.title,
+				p.cover,
+				p.price productPrice,
+				e.product_id productId,
+				e.event_price eventPrice,
+				e.create_time createTime
+		FROM 	t_event_product e,t_product p
+		WHERE	e.product_id = p.id AND p.putaway='Y'
+		AND		e.event_id = #{eventId}
+		LIMIT #{page} , 20
+	</select>
+	
+	<select id="getEventProductCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_event_product e,t_product p
+		WHERE	e.product_id = p.id AND p.putaway='Y'
+		AND		e.event_id = #{eventId} 
+	</select>
+	
+	<select id="getEventProductById" parameterType="int" resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT 	e.id,
+				p.title,
+				p.cover,
+				e.event_price eventPrice,
+				e.create_time createTime
+		FROM 	t_event_product e,t_product p
+		WHERE	e.product_id = p.id AND p.putaway='Y'
+		AND		e.id = #{id}
+	</select>
+	
+	<select id="getEventProdList" resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT  ep.id,
+				ep.event_id eventId,
+				ep.event_price eventPrice,
+				e.title eventTitle,
+				e.cover eventCover,
+				ep.product_id productId,
+				p.price productPrice,
+				p.title,
+				p.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.create_time createTime
+		FROM t_event e, t_event_product ep, t_product p
+		WHERE ep.event_id=e.id AND ep.product_id=p.id AND p.putaway='Y'
+		ORDER BY e.create_time desc
+		LIMIT 0 , 4
+	</select>
+	
+	<select id="getEventProdListShouYe" resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT  ep.id,
+				ep.event_id eventId,
+				ep.event_price eventPrice,
+				e.title eventTitle,
+				e.cover eventCover,
+				ep.product_id productId,
+				p.price productPrice,
+				p.title,
+				p.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.create_time createTime
+		FROM t_event e, t_event_product ep, t_product p
+		WHERE ep.event_id=e.id AND ep.product_id=p.id AND p.putaway='Y'
+		ORDER BY e.create_time desc
+		LIMIT 0 , 9
+	</select>
+	
+	<select id="getProductListNotEventId" parameterType="Map" resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT 	p.id,
+				p.title,
+				p.price productPrice,
+				p.cover
+		FROM 	t_product p
+		WHERE	p.id NOT IN (
+		SELECT 	e.product_id 
+		FROM 	t_event_product e 
+		WHERE 	e.event_id = #{eventId})
+		LIMIT 	#{prdPage} , 20
+	</select>
+	
+	<select id="getProductCountNotEventId" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_product p
+		WHERE	p.id NOT IN (
+		SELECT 	e.product_id 
+		FROM 	t_event_product e 
+		WHERE 	e.event_id = #{eventId})
+	</select>
+	
+	<select id="getEventProdEventIdListDesc" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT  ep.id,
+				ep.event_id eventId,
+				ep.event_price eventPrice,
+				e.title eventTitle,
+				e.cover eventCover,
+				ep.product_id productId,
+				p.price productPrice,
+				p.title,
+				p.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.create_time createTime
+		FROM t_event e, t_event_product ep, t_product p
+		WHERE ep.event_id=e.id AND ep.product_id=p.id AND ep.event_id = #{eventId} AND p.putaway='Y'
+		ORDER BY ep.event_price desc
+		LIMIT #{page} , #{size}
+	</select>
+	
+	<select id="getEventProdEventIdListAsc" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT  ep.id,
+				ep.event_id eventId,
+				ep.event_price eventPrice,
+				e.title eventTitle,
+				e.cover eventCover,
+				ep.product_id productId,
+				p.price productPrice,
+				p.title,
+				p.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.create_time createTime
+		FROM t_event e, t_event_product ep, t_product p
+		WHERE ep.event_id=e.id AND ep.product_id=p.id AND ep.event_id = #{eventId} AND p.putaway='Y'
+		ORDER BY ep.event_price asc
+		LIMIT #{page} , #{size}
+	</select>
+	
+	<select id="getEventProdEventIdList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.EventProductBean">
+		SELECT  ep.id,
+				ep.event_id eventId,
+				ep.event_price eventPrice,
+				e.title eventTitle,
+				e.cover eventCover,
+				ep.product_id productId,
+				p.price productPrice,
+				p.title,
+				p.cover,
+				e.start_time startTime,
+				e.end_time endTime,
+				e.create_time createTime
+		FROM t_event e, t_event_product ep, t_product p
+		WHERE ep.event_id=e.id AND ep.product_id=p.id AND ep.event_id = #{eventId} AND p.putaway='Y'
+		LIMIT #{page} , #{size}
+	</select>
+
+</mapper>

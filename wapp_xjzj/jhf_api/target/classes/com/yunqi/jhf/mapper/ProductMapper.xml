@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.ProductDao" >
+	
+	<select id="getProductList" parameterType="Map" resultType="com.yunqi.jhf.vo.ProductBean">
+		SELECT 	p.id,
+				p.cate_id cateId,
+				p.brand_id brandId,
+				p.putaway,
+				c.title cateName,
+				b.title brandName,
+				p.image_id imageId,
+				p.title,
+				p.price,
+				p.cover,
+				p.description,
+				p.content,
+				p.has_color hasColor,
+				p.has_size hasSize,
+				p.create_time createTime
+		FROM 	t_product p,
+				t_product_brand b,
+				t_prod_cate c
+		WHERE 	c.id = p.cate_id
+		AND		b.id = p.brand_id
+		AND		p.putaway = 'Y'
+		<if test="title != null and title != ''">
+			AND		p.title like "%${title}%"
+		</if>
+		<if test="cateId != null and cateId != 0">
+			AND		p.cate_id = #{cateId} 
+		</if>
+		<if test="brandId != null and brandId != 0">
+			AND		p.brand_id = #{brandId} 
+		</if>
+		ORDER BY p.create_time DESC
+		LIMIT #{page},20
+	</select>
+    
+	<select id="getProductCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_product p,
+				t_product_brand b,
+				t_prod_cate c 
+		WHERE 	c.id = p.cate_id
+		AND		b.id = p.brand_id
+		AND		p.putaway = 'Y'
+		<if test="title != null and title != ''">
+			AND		p.title like "%${title}%"
+		</if>
+		<if test="cateId != null and cateId != 0">
+			AND		p.cate_id = #{cateId} 
+		</if>
+		<if test="brandId != null and brandId != 0">
+			AND		p.brand_id = #{brandId} 
+		</if>
+	</select>
+	
+	<select id="getProductById" parameterType="int" resultType="com.yunqi.jhf.vo.ProductBean">
+		SELECT 	p.id,
+				c.title cateName,
+				b.title brandName,
+				p.image_id imageId,
+				p.title,
+				p.price,
+				p.cover,
+				p.description,
+				p.content,
+				p.create_time createTime
+		FROM 	t_product p,
+				t_product_brand b,
+				t_prod_cate c
+		WHERE 	c.id = p.cate_id
+		AND		b.id = p.brand_id
+		AND		p.putaway = 'Y'
+		AND		p.id = #{id}
+	</select>
+    
+</mapper>

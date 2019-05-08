@@ -1,0 +1,264 @@
+#parse("/include/header.vm")
+<title>修改地址</title> 
+<style>
+	.s{}
+</style>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+	<div class="row">	
+		<form class="form-horizontal text-center style-form1" action="${ctxPath}/front/user/updateUserAddress.do" method="post" id="myform"
+		      data-bv-feedbackicons-valid="glyphicon glyphicon-ok"
+		      data-bv-feedbackicons-invalid="glyphicon glyphicon-remove"
+		      data-bv-feedbackicons-validating="glyphicon glyphicon-refresh">
+		
+			 <div class="style-box1">			
+					<!-- <div class="form-group form-group-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">用户iD</label>
+						<div class="col-xs-9 col-sm-9">${userAddress.userId}</div>
+						
+					</div>  -->
+					<div class="form-group help-block-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">收货人</label>	
+						<div class="col-xs-9 col-sm-9">
+						    <input type="hidden" name="useraddId" value="${userAddress.id}"> 
+							<input type="text" class="form-control" name="consignee" placeholder="请输入收货人" data-bv-notempty-message="收货人不能为空" value="${userAddress.consignee}" maxlength="15">
+						</div>
+					</div>
+					<div class="form-group help-block-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">联系电话</label>
+						<div class="col-xs-9 col-sm-9">
+						  <input type="text" class="form-control" maxlength="11" name="mobile" placeholder="请输入联系电话"
+						   data-bv-trigger="keyup"
+					       required value="${userAddress.mobile}">
+						</div>
+					</div>
+					<!--<div class="form-group help-block-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">邮政编码</label>
+						<div class="col-xs-9 col-sm-9">
+						  <input type="text" class="form-control" name="postcode" placeholder="请输入邮政编码"
+						   data-bv-trigger="keyup"
+					       required
+					       data-bv-notempty-message="邮政编码不能为空" value="${userAddress.postcode}">
+						</div>
+					</div>-->
+					<div class="form-group form-group-style2 overflow-h">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">所在地址</label>
+						<div class="col-xs-9 col-sm-9">
+						  <section class="express-area">
+								<a id="expressArea" href="javascript:void(0)">
+									<dl>
+										<dd class="line1">${userAddress.address}</dd>
+									</dl>
+								</a>
+						  </section>
+						  <input id="addressjs" value="${userAddress.address}"> 
+						</div>
+					</div>
+					
+					<div class="form-group help-block-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">详细地址</label>
+						<div class="col-xs-9 col-sm-9">
+							<textarea class="form-control" maxlength="50" rows="5" name="addressDetail" 
+							  placeholder="请输入详细地址信息，如道路、门 牌号、小区、楼栋号、单元室等"
+						      data-bv-trigger="keyup"
+					          required
+					          data-bv-notempty-message="详细地址不能为空">${userAddress.addressDetail}</textarea>
+						</div>
+					</div>
+					<div class="form-group border-none help-block-style2">
+						<label for="inputPassword" class="col-xs-3 col-sm-3 control-label">默认地址</label>
+						<label class="col-xs-9 col-sm-9 addressmr" id="addressmr">
+						#if($!{userAddress.isDefault} == "Y")
+				        <input type="checkbox" checked="checked" name="addressId" value="${userAddress.id}">
+				        #else
+				        <input type="checkbox" name="addressId" value="${userAddress.id}">
+						#end
+						</label>			
+					</div>
+			 </div>
+			 <button class="radius-box-btn button-color-ff5000" type="button">保存地址</button>
+		</form>
+	</div>
+
+	<!--选择地区弹层-->
+	<section id="areaLayer" class="express-area-box">
+		<header>
+			<h3>选择地区</h3>
+			<a id="backUp" class="back" href="javascript:void(0)" title="返回"></a>
+			<a id="closeArea" class="close" href="javascript:void(0)" title="关闭"></a>
+		</header>
+		<article id="areaBox">
+			<ul id="areaList" class="area-list"></ul>
+		</article>
+	</section>
+	<!--遮罩层-->
+	<div id="areaMask" class="mask"></div>
+	<!--选择地区弹层END-->
+		
+</div>
+
+
+<div class="modal fade"
+     id="myModal"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+
+<script type="text/javascript" src="${ctxPath}/js/jquery.area.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/icheck.min.js"></script>
+<script>
+
+$('input').iCheck({
+		checkboxClass: 'icheckbox_square-red',
+		radioClass: 'iradio_square-red',
+		increaseArea: '20%'
+	});
+
+		jQuery(document).ready(function() {
+			$("input[name='consignee']").bind('input propertychange', function() {
+				var clength = $(this).val().length;
+				if(clength >= 15) {
+					$('#myModal').modal('show');
+					$('#modal-text').text("收货人过长，请重新输入");
+				}
+			});
+			$("textarea[name='addressDetail']").bind('input propertychange', function() {
+				var addrlength = $(this).val().length;
+				if(addrlength >= 50) {
+					$('#myModal').modal('show');
+					$('#modal-text').text("地址过长，请重新输入");
+				}
+			});
+			$('.radius-box-btn').click(function() {
+				var consignee = $("input[name='consignee']").val();
+				var mobile = $("input[name='mobile']").val();
+//				var postcode = $("input[name='postcode']").val();
+				var address = $("#addressjs").val();
+				var addressDetail = $("textarea[name='addressDetail']").val();
+				if(consignee.replace(/(^\s*)|(\s*$)/g, "")=="") {
+					$('#myModal').modal('show');
+					$('#modal-text').text("收货人不能为空");
+				} else if(mobile == "") {
+					$('#myModal').modal('show');
+					$('#modal-text').text("联系电话不能为空");
+				} else if(!(/^1[34578]\d{9}$/.test(mobile))) {
+					$('#myModal').modal('show');
+					$('#modal-text').text("联系电话有误，请重填");
+				} 
+//				else if(postcode == "") {
+//					$('#myModal').modal('show');
+//					$('#modal-text').text("邮政编码不能为空");
+//				} else if(!(/^[1-9][0-9]{5}$/.test(postcode))) {
+//					$('#myModal').modal('show');
+//					$('#modal-text').text("邮政编码格式不对");
+//				}  
+				else if(address == null) {
+					$('#myModal').modal('show');
+					$('#modal-text').text("所在地址不能为空");
+				} else if(addressDetail.replace(/(^\s*)|(\s*$)/g, "")=="") {
+					$('#myModal').modal('show');
+					$('#modal-text').text("详细地址不能为空");
+				} else {
+          $.ajax({
+						url: '${ctxPath}/front/user/updateUserAddress.do',
+						method: 'post',
+						data: {
+							useraddId: $('input[name="useraddId"]').val(),
+							consignee: $('input[name="consignee"]').val(),
+							address: $("#addressjs").val(),
+							addressDetail: $('textarea[name="addressDetail"]').val(),
+							mobile: $('input[name="mobile"]').val(),
+							addressId: $('input[name="addressId"]:checked').val(),
+							postcode: $('input[name="postcode"]').val()
+						},
+						success: function(result) {
+							$('#modal-title').html('提示');
+							$('#modal-text').text(result.info);
+							$('#myModal').modal('show').on('hidden.bs.modal', function() {
+								if(result.code === 0) {
+									location.href = "${ctxPath}/front/user/userAddressList.do"
+								} else {
+									return false
+								}
+							})
+						}
+					})
+				}
+
+			});
+		});
+
+
+// jQuery(document).ready(function(){
+// 	$('#myform').bootstrapValidator(
+// 	{
+// 		fields: {
+//              mobile: {
+//                  message: 'The phone is not valid',
+//                  validators: {
+//                      notEmpty: {
+//                          message: '联系电话不能为空'
+//                      },
+//                      regexp: {
+//                          regexp: /^1[3|5|8]{1}[0-9]{9}$/,
+//                          message: '请输入正确的手机号码'
+//                      }
+//                  }
+//              },
+//    }}
+// 		).on('success.form.bv', function (e) {
+// 		e.preventDefault();
+// 		$.ajax({
+// 			url: '${ctxPath}/front/user/updateUserAddress.do',
+// 			method: 'post',
+// 			data: {
+// 				useraddId: $('input[name="useraddId"]').val(),
+// 				consignee: $('input[name="consignee"]').val(),
+// 				address: $("#addressjs").val(),
+// 				addressDetail: $('textarea[name="addressDetail"]').val(),
+// 				mobile: $('input[name="mobile"]').val(),
+// 				addressId: $('input[name="addressId"]:checked').val(),
+// 				postcode: $('input[name="postcode"]').val()
+// 			},
+// 			success: function (result) {
+// 				console.log($("#addressjs").val())
+// 				$('#modal-title').html('提示');
+// 				$('#modal-text').text(result.info);
+// 				$('#myModal').modal('show').on('hidden.bs.modal', function () {
+// 					if (result.code === 0) {
+// 						location.href = "${ctxPath}/front/user/userAddressList.do"					
+// 					} else {
+// 						return false
+// 					}
+// 				})
+// 			}
+// 		})
+// 	});
+// });
+
+
+
+
+</script>
+</body>
+</html>

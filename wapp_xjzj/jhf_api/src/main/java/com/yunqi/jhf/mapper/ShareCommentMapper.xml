@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.ShareCommentDao" >    
+	<!-- 根据 分享的分类id   分享用户 获取分享信息列表 -->
+	<select id="getShareCommBySid" parameterType="Map" resultType="com.yunqi.jhf.vo.ShareCommentBean">
+		SELECT 	sc.id,
+				sc.user_id userId,
+				sc.share_id shareId,
+				sc.user_name userName,
+				sc.parent_comment parentComment,
+				sc.comment_content commentContent,
+				sc.comment_time commentTime
+		FROM 	t_share_comment sc
+		WHERE	sc.share_id = #{shareId}
+		ORDER BY sc.comment_time ASC 
+	</select>
+	
+</mapper>

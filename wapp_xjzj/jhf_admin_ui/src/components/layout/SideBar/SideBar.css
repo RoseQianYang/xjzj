@@ -1,0 +1,23 @@
+#jhf-sidebar .jhf-sidebar-menu {
+  border-right: 0;
+  height: 100%;
+}
+
+#jhf-sidebar .jhf-sidebar-menu,
+#jhf-sidebar .jhf-sidebar-menu .ant-menu-item > a {
+  color: #fff;
+}
+
+#jhf-sidebar .jhf-sidebar-menu,
+#jhf-sidebar .jhf-sidebar-menu .ant-layout-sider-children {
+  background: #42485b;
+}
+
+#jhf-sidebar .jhf-sidebar-menu .ant-menu-item-selected,
+#jhf-sidebar .jhf-sidebar-menu .ant-menu-sub {
+  background: #333744;
+}
+
+#jhf-sidebar .jhf-sidebar-menu .ant-menu-item-selected > a {
+  color: #1890ff;
+}

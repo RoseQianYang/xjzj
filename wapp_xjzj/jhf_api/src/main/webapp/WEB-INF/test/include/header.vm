@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link href="${ctxPath}/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="${ctxPath}/bootstrapvalidator/css/bootstrapValidator.min.css">
+<link href="${ctxPath}/css/font-awesome.min.css" rel="stylesheet" />
+<link href="${ctxPath}/css/swiper.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="${ctxPath}/css/jquery.fancybox.css" media="screen" />
+<link href="${ctxPath}/css/skins/all.css" rel="stylesheet">
+<link href="${ctxPath}/css/common.css" rel="stylesheet" />
+<script type="text/javascript" src="${ctxPath}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/swiper.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/jquery.form.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/common.js"></script>
+<script>
+var _hmt = _hmt || [];
+(function() {
+  var hm = document.createElement("script");
+  hm.src = "https://hm.baidu.com/hm.js?a9b02fa7b2c4a5f71b0d871ce1bb1675";
+  var s = document.getElementsByTagName("script")[0]; 
+  s.parentNode.insertBefore(hm, s);
+})();
+
+
+</script>

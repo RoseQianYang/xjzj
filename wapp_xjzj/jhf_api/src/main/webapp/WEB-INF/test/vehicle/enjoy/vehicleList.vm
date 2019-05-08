@@ -1,0 +1,116 @@
+#parse("/include/header.vm")
+<title>房车展示列表</title>
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<style>
+	.ptop5-pbottom-15 h4 {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+<script src="${ctxPath}/js/dropload.min.js"></script>
+
+</head>
+
+<body class="bg-f0f0f0">
+	<div class="container">
+		<!--房车展示列表-->
+		<div class="row text-center mtop10">
+			<div class="box-list-double">
+				#if ($vehickeLists.list.size()>0) 
+				#foreach($vehicke in $vehickeLists.list)
+				<div class="box-list-double-main mtop10">
+					<a href="${ctxPath}/vehicle/enjoy/vehicleDetailList.do?vehicleId=${vehicke.id}">
+						<div class="box-list-double-main-box">
+							<p><img src="${strUtil.uploadPath(${vehicke.cover})}" class="height200" /></p>
+							<div class="ptop5-pbottom-15">
+								<h4><strong>${strUtil.safeHtml(${strUtil.left(${vehicke.vehicleName},9)})}</strong></h4>
+							</div>
+						</div>
+					</a>
+				</div>
+				#end	
+				#else
+		<div class="mtop20 paddinglr10">
+			<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+		</div>
+	#end
+			</div>
+			<!--房车展示列表END-->
+
+		</div>
+		#parse("/include/backtop.vm")
+		<script>
+			$(document).ready(function() {
+				function getQueryString(name) {
+					var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)", "i");
+					var r = window.location.search.substr(1).match(reg);
+					if (r != null) return unescape(r[2]); 
+					return null;
+				}
+
+				var currentPage = 1
+				const vehicleBrandId = getQueryString('vehicleBrandId')
+				const statusIndex = location.search.indexOf('status=')
+				const data = {}
+
+				if(statusIndex !== -1) {
+					const status = parseInt(location.search.substr(statusIndex + 7, 1), 10)
+					data.status = status
+				}
+
+				if(vehicleBrandId) {
+					data.vehicleBrandId = vehicleBrandId
+				}
+
+				$('.container').dropload({
+					scrollArea: window,
+					loadDownFn: function(me) {
+						data.page = ++currentPage
+						$.ajax({
+							type: 'POST',
+							url: '/jhf/vehicle/enjoy/getVehiclePageLists.do',
+							contentType: 'application/json',
+							dataType: 'json',
+							data: JSON.stringify(data),
+							success: function(res) {
+								if(res.data.list.length > 0) {
+									var list = res.data.list
+									for(let i in list) {
+										var cover = list[i].cover
+										var index = cover.lastIndexOf('.')
+										var imgType = cover.slice(index)
+
+										$('.box-list-double').eq(0).append(
+											'<div class="box-list-double-main mtop10">' +
+											'<a href="${ctxPath}/vehicle/enjoy/vehicleDetailList.do?vehicleId=' + list[i].id + '">' +
+											'<div class="box-list-double-main-box">' +
+											'<p><img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_s' + imgType + '" class="height200" /></p>' +
+											'<div class="ptop5-pbottom-15">' +
+											'<h4><strong>' + list[i].vehicleName + '</strong></h4>' +
+											'</div>' +
+											'</div>' +
+											' </a>' +
+											' </div>'
+										)
+									}
+								} else {
+									me.lock();
+									me.noData();
+								}
+								me.resetload();
+							},
+							error: function(xhr, type) {
+								me.resetload();
+							}
+						});
+					}
+				})
+			})
+		</script>
+
+</body>
+
+</html>

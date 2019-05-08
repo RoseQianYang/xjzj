@@ -1,0 +1,53 @@
+#parse("/include/header.vm")
+<title>$!{mobileroute.title}详情</title> 
+</head>
+
+<body>
+<div class="container">
+	#if($imgSrcList.size()>0)
+	<div class="row">
+		<div class="swiper-container">
+		  <div class="swiper-wrapper">
+			#foreach($mobile in $imgSrcList)			
+				<div class="swiper-slide"><img src="${strUtil.uploadPath($mobile)}" class="img1"/></div> 
+			#end
+		  </div>
+		  <div class="swiper-pagination"></div>
+		</div>
+	</div>
+	#end	
+	<div class="row">
+		 <div class="col-xs-12 col-md-12">
+			<div class="route-t">$!{mobileroute.title}</div>
+			<div class="font-color-9a9a9a marginb10">$!{mobileroute.introduction}</div>
+			<hr class="hre">
+			<div class="route-addr">
+				<a  href="${ctxPath}/detailMap.do?address=$!{mobileroute.address}">
+				<img src="${ctxPath}/imgs/56-01.png" class="addr-img addr-img1">
+				## <i class="fa fa-map-marker icon-ff5000 fz16" aria-hidden="true"></i>
+				$!{mobileroute.address}
+				</a>
+			</div>
+		 </div>
+	</div>
+<!--门店简介-->
+    <div class="row">	  
+		<div class="bg-color-1e1e1e text-center"><img src="${ctxPath}/imgs/jb.png" class="mesimg-style2" /></div>
+		<div class="content-msgbox">
+		#if($!{mobileroute.content}) $!{mobileroute.content} #else <p class="text-center">暂无详情</p>  #end
+		</div> 
+    </div>	
+<!--门店简介END-->	
+</div>
+
+<script> 
+var mySwiper = new Swiper('.swiper-container',{
+pagination : '.swiper-pagination',
+autoplay: 5000,
+loop : true,
+autoplayDisableOnInteraction : false,
+})
+</script>	  
+
+</body>
+</html>

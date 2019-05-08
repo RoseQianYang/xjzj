@@ -1,0 +1,11 @@
+[2018-05-07 09:50:46:654][main]com.yunqi.common.util.HttpUtil:114
+[INFO] 提交HTTP POST
+ [2018-05-07 09:50:46:654][main]com.yunqi.common.util.HttpUtil:123
+[INFO] HTTP POST PARAM: access_token=9_MDfCKlqIjHs_CldPsE6JoqPaJwGvBkEUuRTyz7Krbkj30PziJ5bO8g7m2cOvEpS6dW9iHQ9WdcwP9RUS7_AjEFWgBtRikCeH97pvjlVJ0OLhR9pFUUTi8zU1VO-ZaRC0GTe0ADO4tfv8JrZ4ZNVgCFAESA
+ [2018-05-07 09:50:46:654][main]com.yunqi.common.util.HttpUtil:133
+[INFO] HTTP POST URL：https://api.weixin.qq.com/cgi-bin/menu/create?access_token=9_MDfCKlqIjHs_CldPsE6JoqPaJwGvBkEUuRTyz7Krbkj30PziJ5bO8g7m2cOvEpS6dW9iHQ9WdcwP9RUS7_AjEFWgBtRikCeH97pvjlVJ0OLhR9pFUUTi8zU1VO-ZaRC0GTe0ADO4tfv8JrZ4ZNVgCFAESA
+ [2018-05-07 09:50:46:669][main]com.yunqi.common.util.HttpUtil:149
+[INFO] HTTP POST JSON BODY: {"button":[{"name":"房车销售","sub_button":[{"name":"车型品鉴","type":"view","url":"http://www.jhffcly.com/jhf/vehicle/enjoy/TVehicleHomeAction.do"},{"name":"二手房车","type":"view","url":"http://www.jhffcly.com/jhf/vehicle/enjoy/TVehicleHomeAction.do"},{"name":"实体展厅","type":"view","url":"http://www.jhffcly.com/jhf/store/storeList.do"},{"name":"销售顾问","type":"view","url":"https://mpkf.weixin.qq.com"}]},{"name":"分销商城","sub_button":[{"name":"商城首页","type":"view","url":"http://www.jhffcly.com/jhf/shopping/shouYe.do"},{"name":"我的团队","type":"view","url":"http://www.jhffcly.com/jhf/friend/friendList.do"},{"name":"我的收益","type":"view","url":"http://www.jhffcly.com/jhf/front/my/integralList.do?status=2"}]},{"name":"营地露营","sub_button":[{"name":"自有营地","type":"view","url":"http://www.jhffcly.com/jhf/front/campsite/campsiteList.do?cateId=1"},{"name":"合作营地","type":"view","url":"http://www.jhffcly.com/jhf/front/campsite/campsiteList.do?cateId=2"},{"name":"露营路线","type":"view","url":"http://www.jhffcly.com/jhf/front/mobileroute/mobileList.do"},{"name":"约伴出行","type":"view","url":"http://www.jhffcly.com/jhf/share/shareList.do?suserName=null"}]}]}
+ [2018-05-07 09:50:46:967][main]com.yunqi.common.util.HttpUtil:164
+[INFO] HTTP POST响应：{"errcode":41001,"errmsg":"access_token missing hint: [8aWJ_0846vr31!]"}
+ 

@@ -1,0 +1,63 @@
+#parse("/include/header.vm")
+<title>$!{store.title}详情</title> 
+</head>
+
+<body>
+<div class="container">
+	#if($imgSrcList.size()>0)
+	<div class="row">
+		<div class="swiper-container">
+		  <div class="swiper-wrapper">
+		    #foreach($img in $imgSrcList)
+				<div class="swiper-slide"><img src="${strUtil.uploadPath($img)}"/></div>
+			#end
+		  </div>
+		  <div class="swiper-pagination"></div>
+		</div>
+	</div> 
+	#end	 
+	<div class="row">
+		 <div class="col-xs-12 col-md-12">
+			<p class="home-tit">$!{store.title}</p>
+			<p><a href="${ctxPath}/detailMap.do?address=$!{store.address}" class="fsize14-color787878">
+			## <i class="fa fa-map-marker icon-ff5000 fz16" aria-hidden="true"></i>
+      <img src="${ctxPath}/imgs/56-01.png" class="addr-img addr-img1">
+			$!{store.address}
+			</a>
+			</p>
+			## <p class="phone-border-box"><a href="tel:$!{store.phone}"><i class="fa mr10 fa-phone icon-ff5000" aria-hidden="true"></i>$!{store.phone}</a></p>
+		 </div>
+	</div>
+<!--门店简介-->
+    <div class="row f-mt12">	  
+		<div class="bg-color-1e1e1e text-center"><img src="${ctxPath}/imgs/4747.png" class="mesimg-style3" /></div>
+		<div class="content-msgbox">
+		#if($!{store.content}) $!{store.content} #else <p class="text-center">暂无详情</p>  #end
+		</div> 
+    </div>	
+<!--门店简介END-->	
+<div class="footer-hei2"></div>
+	<a href="tel:$!{store.phone}" class="fixed-btn-box">
+		<div class="ljlx-p">立即联系</div>
+	</a>
+</div>
+	  
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+		<img src="${ctxPath}/imgs/loading.gif"/>
+    </div>
+  </div>
+</div>
+
+<script> 
+var mySwiper = new Swiper('.swiper-container',{
+pagination : '.swiper-pagination',
+autoplay: 5000,
+loop : true,
+autoplayDisableOnInteraction : false,
+})
+</script>
+
+</body>
+</html>

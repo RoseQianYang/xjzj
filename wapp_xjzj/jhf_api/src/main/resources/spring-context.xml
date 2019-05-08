@@ -1,0 +1,119 @@
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+	xmlns:context="http://www.springframework.org/schema/context"
+	xsi:schemaLocation="
+	http://www.springframework.org/schema/beans   
+    http://www.springframework.org/schema/beans/spring-beans.xsd  
+    http://www.springframework.org/schema/context  
+    http://www.springframework.org/schema/context/spring-context.xsd">
+	<import resource="classpath*:config/dao-context.xml"/>
+	
+	<!-- 自动扫描(自动注入) -->
+	<context:component-scan base-package="com.yunqi.jhf.service.front,com.yunqi.jhf.service" />
+		<bean id="viewResolver" class="org.springframework.web.servlet.view.velocity.VelocityViewResolver">
+		   <property name="viewClass">
+		      <value>org.springframework.web.servlet.view.velocity.VelocityView</value>
+		   </property>
+		   <property name="contentType"><value>text/html;charset=UTF-8</value></property>
+		   <property name="exposeSessionAttributes" value="true" />
+		   <property name="exposeRequestAttributes" value="false" />
+		   
+		   <property name="allowSessionOverride" value="true"/>
+		   <property name="suffix">
+		      <value>.vm</value>
+		   </property>
+		</bean>
+		
+		<!-- velocity视图解析器配置 -->
+		<bean id="velocityConfigurer"
+		     class="org.springframework.web.servlet.view.velocity.VelocityConfigurer">
+		   <property name="resourceLoaderPath" value="WEB-INF/test" />
+		   <property name="velocityProperties">
+		      <props>
+		         <prop key="input.encoding">UTF-8</prop>
+		         <prop key="output.encoding">UTF-8</prop>
+		         <prop key="contentType">text/html;charset=UTF-8</prop>
+		      </props>
+		   </property>
+		</bean>
+	<bean id="springContextUtil" class="com.yunqi.jhf.web.SpringContextUtil"
+		lazy-init="false" />
+ 
+      <!--   jhf正式库
+       <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>  
+       <property name="url" value="jdbc:mysql://111.230.11.240:33336/jhf?useUnicode=true&amp;characterEncoding=UTF8"></property>  
+       <property name="username" value="jhf"></property>  
+       <property name="password" value="@)!*)#)^NCyq0307"></property> 
+      -->
+      
+      
+     <!-- 配置Druid 数据源 -->
+	 <bean id="dataSource" class="com.alibaba.druid.pool.DruidDataSource" init-method="init"   
+            destroy-method="close">  
+            <property name="driverClassName" value="com.mysql.jdbc.Driver"></property>  
+            <property name="url" value="jdbc:mysql://bj-cdb-3mv9lifd.sql.tencentcdb.com:63308/wapp_xjzj?useUnicode=true&amp;characterEncoding=UTF8"></property>  
+            <property name="username" value="root"></property>  
+            <property name="password" value="YunQi@)!*0605Wapp"></property>  	
+      <!-- 配置初始化大小、最小、最大 -->  
+      <property name="initialSize" value="10" />  
+      <property name="minIdle" value="5" />   
+      <property name="maxActive" value="20" />  
+      <!-- 配置获取连接等待超时的时间 -->  
+      <property name="maxWait" value="60000" />  
+      <!-- 配置间隔多久才进行一次检测，检测需要关闭的空闲连接，单位是毫秒 -->  
+      <property name="timeBetweenEvictionRunsMillis" value="60000" />  
+      <!-- 配置一个连接在池中最小生存的时间，单位是毫秒 -->  
+      <property name="minEvictableIdleTimeMillis" value="300000" />  
+      <property name="validationQuery" value="SELECT 'x'" />  
+      <property name="testWhileIdle" value="true" />  
+      <property name="testOnBorrow" value="false" />  
+      <property name="testOnReturn" value="false" />  
+      <!-- 打开PSCache，并且指定每个连接上PSCache的大小 -->  
+      <property name="poolPreparedStatements" value="true" />  
+      <property name="maxPoolPreparedStatementPerConnectionSize" value="20" />  
+  
+      <!-- 配置监控统计拦截的filters -->  
+      <property name="filters" value="stat,log4j,wall" />    
+    </bean>   
+    <bean id="logFilter" class="com.alibaba.druid.filter.logging.Slf4jLogFilter"> 
+    <property name="statementExecutableSqlLogEnable" value="true" /> 
+    </bean>
+	 
+	<!-- 验证码插件配置 -->
+	<bean id="captchaProducer" class="com.google.code.kaptcha.impl.DefaultKaptcha">
+		<property name="config">
+			<bean class="com.google.code.kaptcha.util.Config">
+				<constructor-arg>
+					<props>
+						<prop key="kaptcha.border">no</prop>
+						<prop key="kaptcha.border.color">105,179,90</prop>
+						<prop key="kaptcha.textproducer.font.color">red</prop>
+						<prop key="kaptcha.image.width">250</prop>
+						<prop key="kaptcha.textproducer.font.size">90</prop>
+						<prop key="kaptcha.image.height">120</prop>
+						<prop key="kaptcha.session.key">code</prop>
+						<prop key="kaptcha.textproducer.char.length">4</prop>
+						<prop key="kaptcha.textproducer.font.names">Arial</prop>
+					</props>
+				</constructor-arg>
+			</bean>
+		</property>
+	</bean>
+  <!-- spring和MyBatis完美整合，不需要mybatis的配置映射文件 -->
+    <bean id="sqlSessionFactory" class="org.mybatis.spring.SqlSessionFactoryBean">
+        <property name="dataSource" ref="dataSource" />
+        <!-- 自动扫描mapping.xml文件，**表示迭代查找 -->
+        <property name="mapperLocations" value="classpath:com/yunqi/jhf/**/*.xml" />
+    </bean>
+    <!-- DAO接口所在包名，Spring会自动查找其下的类 ,包下的类需要使用@MapperScan注解,否则容器注入会失败 -->
+    <bean class="org.mybatis.spring.mapper.MapperScannerConfigurer">
+        <property name="basePackage" value="com.yunqi.jhf.*" />
+        <property name="sqlSessionFactoryBeanName" value="sqlSessionFactory" />
+    </bean>
+    
+    <!-- (事务管理)transaction manager, use JtaTransactionManager for global tx -->
+    <bean id="transactionManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">
+        <property name="dataSource" ref="dataSource" />
+    </bean>   
+</beans>

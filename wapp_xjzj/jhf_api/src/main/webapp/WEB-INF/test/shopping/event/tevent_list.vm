@@ -1,0 +1,22 @@
+<style>
+	.table-title{border:1px solid red;}
+</style>
+<div style="margin-left: 10%;margin-top: 10%;">
+	#foreach($event in ${eventList})
+		<div style="float:left;border:1px solid red;"> 
+		    <img style="width:400px;height:200px;" src="$!{event.cover}"></br>
+		    #foreach($eventprod in $eventprodList.list)
+		    	#if($!{event.id}==$!{eventprod.eventId})
+					<div style="float:left;">    
+					    <img style="width:150px;height:150px;" src="$!{eventprod.cover}"></br>
+						产品名称：$!{eventprod.title}</br>
+						活动价格：$!{eventprod.eventPrice}</br>
+						原价格：$!{eventprod.productPrice}</br>
+					</div>
+				#end
+			#end
+		</div>
+	#end
+</div>
+
+

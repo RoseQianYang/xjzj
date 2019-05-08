@@ -1,0 +1,113 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.yunqi.jhf.dao.OrderDetailDao">
+
+	<select id="getOrderDetailList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT od.id,
+		od.order_id orderId,
+		o.order_name orderName,
+		o.order_no orderNo,
+		o.order_total_price orderTotalPrice,
+		od.user_id userId,
+		u.user_name userName,
+		od.product_id productId,
+		p.title productTitle,
+		od.product_cate_id productCateId,
+		pc.title productCateTitle,
+		od.product_brand_id productBrandId,
+		pb.title productBrandTitle,
+		o.order_status orderStatus,
+		od.product_count productCount,
+		od.product_price productPrice,
+		od.product_color productColor,
+		od.product_size productSize
+		FROM t_order_detail od,
+		t_order o,t_user u,
+		t_product p,
+		t_prod_cate pc,
+		t_product_brand pb
+		WHERE od.order_id=o.id
+		AND od.user_id=u.id
+		AND od.product_id=p.id
+		AND od.product_cate_id = pc.id
+		AND od.product_brand_id = pb.id
+		AND o.id=#{orderId} ORDER BY o.payment_time DESC
+	</select>
+
+	<select id="getOrderDetailByOidList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT od.id,
+		o.id orderId,
+		o.order_name orderName,
+		o.order_no orderNo,
+		o.order_status orderStatus,
+		od.product_id productId,
+		od.user_id userId,
+		p.title
+		productTitle,
+		p.Cover productCover,
+		od.product_count productCount,
+		od.product_price productPrice,
+		od.product_color productColor,
+		od.product_size productSize
+		FROM t_order_detail od,t_product p,t_user u,t_order o
+		WHERE od.product_id=p.id AND od.user_id=u.id AND od.order_id=o.id
+		AND o.id=#{orderId} ORDER BY o.payment_time DESC
+	</select>
+
+
+  <select id="getOrderDetailByUidList" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT od.id,
+		o.id orderId,
+		o.order_name orderName,
+		o.order_total_price orderTotalPrice,
+		o.order_no orderNo,
+		o.order_status orderStatus,
+		od.product_id productId,
+		od.user_id userId,
+		p.title
+		productTitle,
+		p.Cover productCover,
+		od.product_count productCount,
+		od.product_price productPrice,
+		od.product_color productColor,
+		od.product_size productSize
+		FROM t_order_detail od,t_product p,t_user u,t_order o
+		WHERE od.product_id=p.id AND od.user_id=u.id AND od.order_id=o.id
+		AND od.user_id=#{userId} ORDER BY o.payment_time DESC
+	</select>
+       
+         
+	<select id="getOrderDetailByUidLists" parameterType="Map"
+		resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT od.id,
+		o.id orderId,
+		o.order_name orderName,
+		o.order_total_price orderTotalPrice,
+		o.order_no orderNo,
+		o.order_status orderStatus,
+		od.product_id productId,
+		od.user_id userId,
+		p.title
+		productTitle,
+		p.Cover productCover,
+		od.product_count productCount,
+		od.product_price productPrice,
+		od.product_color productColor,
+		od.product_size productSize
+		FROM t_order_detail od,t_product p,t_user u,t_order o
+		WHERE od.product_id=p.id AND od.user_id=u.id AND od.order_id=o.id
+		AND od.user_id=#{userId} ORDER BY o.payment_time DESC
+		LIMIT  #{page} , #{size}
+	</select>
+	
+	<select id="getOrderDetailByUidListsCount" parameterType="Map" resultType="int">
+	  SELECT 	COUNT(1)
+	  FROM t_order_detail od,t_product p,t_user u,t_order o
+	  WHERE od.product_id=p.id AND od.user_id=u.id AND od.order_id=o.id
+	  AND od.user_id=#{userId}
+	</select>
+
+</mapper>

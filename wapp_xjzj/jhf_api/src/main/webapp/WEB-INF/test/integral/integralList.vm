@@ -1,0 +1,70 @@
+#parse("/include/header.vm")
+<title>我的财富</title> 
+</head>
+
+
+<body class="bg-f0f0f0">
+<div class="container">
+	<div class="row">
+		 <div class="money-box">
+			 <div class="money-box-left">
+				<em>我的积分</em>
+				
+				<h3 class="mtop10">$!weChatUserIntegralSum</h3>
+				
+			 </div>
+			 <div class="money-box-right">
+				<a href="${ctxPath}/front/integral/addIntegralConversion.do">兑换</a>
+			 </div>
+		 </div>
+		 <div class="style1-font">积分明细</div>
+		 #if ($integralListByUserId.list.size()>0)
+			 <div class="money-box-list-box">
+			 #foreach($integral in $integralListByUserId.list)
+				 <div class="money-box-list">
+					 <div class="money-box-list-left">
+						<em>$integral.introduction</em>
+						  <div class="money-box5">
+						     <h6>$strUtil.showTime($integral.createTime)</h6>
+						     <div class="money-box-list-right">
+					      	#if($integral.integralNum > 0)
+							    +$integral.integralNum
+						      #else
+							    $integral.integralNum
+						      #end
+					    </div>
+						</div>						
+					 </div>					
+				 </div>
+			 #end	 
+			</div>	
+			
+			<div class="pagination-box">
+				#set($add=$integralListByUserId.currentPage + 1)
+				#set($minus=$integralListByUserId.currentPage - 1)
+				<p>
+					总共有$!{integralListByUserId.totalSize}条数据 &nbsp;&nbsp;   
+					$!{integralListByUserId.currentPage}/$!{integralListByUserId.totalPage}页
+				</p>
+				#if ($integralListByUserId.currentPage > 1)		
+					<a href="${ctxPath}/front/integral/integralList.do?page=1" class="btn btn-primary">首页</a>
+					<a href="${ctxPath}/front/integral/integralList.do?page=$!{minus}" class="btn btn-default">上一页</a>
+				#end
+				#if ($integralListByUserId.currentPage < $integralListByUserId.totalPage)
+					<a href="${ctxPath}/front/integral/integralList.do?page=$!{add}" class="btn btn-default">下一页</a>
+				#end
+				#if ($integralListByUserId.currentPage > 1)	
+				<a href="${ctxPath}/front/integral/integralList.do?page=$!{integralListByUserId.totalPage}" class="btn btn-primary">尾页</a>
+				#end
+			</div>	
+		#else
+			<div class="mtop20 paddinglr10">
+				<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+			</div>
+		#end 
+	</div>
+
+</div>
+#parse("/include/backtop.vm")
+</body>
+</html>

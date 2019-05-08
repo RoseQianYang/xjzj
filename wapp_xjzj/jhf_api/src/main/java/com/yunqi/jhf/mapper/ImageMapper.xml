@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.ImageDao" >    
+
+	<!-- 获取图片信息列表 -->
+	<select id="getImageList" parameterType="Map" resultType="com.yunqi.jhf.vo.ImageInfoBean">
+		SELECT 
+				i.id,
+				i.title,
+				i.img_src imgsrc,
+				i.img_cate_id imgcateid,
+				c.title imgCateName,
+				i.create_time createtime
+		FROM 	t_img i,t_img_cate c 
+		WHERE 	i.img_cate_id = c.id
+		<if test="title != null and title != ''">
+			AND 	i.title LIKE '%${title}%'
+		</if>
+		<if test="imgCateId != null">
+			AND		i.img_cate_id in 
+			<foreach collection="imgCateId" index="index" item="item" open="(" separator="," close=")">
+	                #{item}       
+	      	</foreach>    
+		</if>
+		ORDER BY i.create_time DESC
+		LIMIT #{page} , 20
+	</select>
+
+	<select id="getImageCount" parameterType="Map" resultType="int">
+		SELECT COUNT(1) 
+		FROM 	t_img i,t_img_cate c 
+		WHERE 	i.img_cate_id = c.id
+		<if test="title != null and title != ''">
+			AND 	i.title LIKE '%${title}%'
+		</if>
+		<if test="imgCateId != null">
+			AND		i.img_cate_id in 
+			<foreach collection="imgCateId" index="index" item="item" open="(" separator="," close=")">
+	                #{item}       
+	      	</foreach>    
+	    </if>
+	</select>
+
+
+	<insert id="addImageList" parameterType="List">
+		INSERT INTO t_img(img_cate_id, title, img_src, create_time ) VALUES
+		<foreach collection="list" index="index" item="item" separator=",">
+			(#{item.imgCateId},#{item.title},#{item.imgSrc},NOW())
+		</foreach>
+	</insert>
+</mapper>

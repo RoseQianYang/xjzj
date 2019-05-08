@@ -1,0 +1,14 @@
+eclipse.preferences.version=1
+encoding//src/main=utf-8
+encoding//src/main/java=UTF-8
+encoding//src/main/resources=UTF-8
+encoding//src/main/webapp/WEB-INF/test=utf-8
+encoding//src/main/webapp/WEB-INF/test/my/my_order/torder_list.vm=UTF-8
+encoding//src/main/webapp/WEB-INF/test/my/my_order/torderdetail.vm=UTF-8
+encoding//src/main/webapp/WEB-INF/test/pay.vm=UTF-8
+encoding//src/main/webapp/WEB-INF/test/shopping/confirmorder.vm=utf-8
+encoding//src/main/webapp/WEB-INF/test/shopping/shoppingcart/tshoppingcart.vm=utf-8
+encoding//src/main/webapp/WEB-INF/test/test.vm=utf-8
+encoding//src/main/webapp/WEB-INF/test/vehicle/enjoy/vehiclebrandlist.vm=utf-8
+encoding//src/test/java=UTF-8
+encoding//src/test/resources=UTF-8

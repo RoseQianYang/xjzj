@@ -1,0 +1,636 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<Project projectName="yunqi_jhf" packageBase="com.yunqi.jhf.dao"
+	db="mysql" swagger="true">
+
+	<Generator name="webapp" destBasePath="" destDomainBasePath="">
+		<DaoContextExtend />
+		<DomainList />
+	</Generator>
+
+	<!-- user related config begin -->
+	<Domain id="TUser" table="t_user" comment="前台用户">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int" comment="用户ID，唯一标识符" autoIncrement="true"/>
+			<Prop id="openId" column="openid" type="String" comment="微信公众号 openid" />
+			<Prop id="parentId" column="parent_id" type="int" comment="上级用户id，0 表示1级代理商" />
+			<Prop id="userName" column="user_name" type="String" comment="用户名称" />
+			<Prop id="avatar" column="avatar" type="String" comment="用户头像" />
+			
+			<Prop id="userIntegralSum" column="user_integral_sum" type="int" comment="用户积分总数" />
+			<Prop id="mobile" column="mobile" type="String" comment="用户电话作为登录账户" />
+			<Prop id="isEnabled" column="is_enabled" type="String" comment="是否可用 Y 可用 N 被挂起" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="最后修改日期" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建日期" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TUserAddress" table="t_user_address" comment="用户地址">
+		<PropList>
+			<Prop id="id" column="id" primary="true" autoIncrement="true"
+				type="int" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int" comment="用户ID，唯一标识符" />
+			<Prop id="address" column="address" type="String" comment="地址" />
+			<Prop id="addressDetail" column="address_detail" type="String" comment="详细地址" />
+			<Prop id="isDefault" column="is_default" type="String" 
+			comment="是否是默认地址 Y默认地址  N普通地址" />
+			<Prop id="consignee" column="consignee" type="String" comment="收货人" />
+			<Prop id="mobile" column="mobile" type="String" comment="手机号码" />
+			<Prop id="postcode" column="postcode" type="String" comment="邮编" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="最后修改日期" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建日期" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TShoppingCart" table="t_shopping_cart" comment="购物车">
+		<PropList>
+			<Prop id="id" column="id" primary="true" autoIncrement="true"
+				type="int" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int" comment="用户ID，唯一标识符" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="最后修改日期" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建日期" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TShoppingCartDetail" table="t_shopping_cart_detail" comment="购物车详情">
+		<PropList>
+			<Prop id="id" column="id" primary="true" autoIncrement="true"
+				type="int" comment="唯一标识" />
+			<Prop id="shoppingCartId" column="shopping_cart_id" type="int" comment="购物车ID，唯一标识符" />
+			<Prop id="productId" column="product_id" type="int" comment="商品ID" />
+			<Prop id="productColor" column="product_color" type="String" comment="商品颜色" />
+			<Prop id="productSize" column="product_size" type="String" comment="商品尺码" />
+			<Prop id="productNum" column="product_num" type="int" comment="商品数量" />
+			<Prop id="productPrice" column="product_price" type="int" comment="商品价格" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="最后修改日期" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建日期" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TOrder" table="t_order" comment="订单表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int" comment="用户ID，唯一标识符" />
+			<Prop id="userAddressId" column="user_address_id" type="int" comment="用户地址id" />
+			<Prop id="orderTotalPrice" column="order_total_price" type="int" comment="订单总价格" />
+			<Prop id="orderName" column="order_name" type="String"
+				comment="订单名称" />
+			<Prop id="orderNo" column="order_no" type="String"
+				comment="订单编号" />
+			<Prop id="orderStatus" column="order_status" type="String"
+				comment="订单状态" />
+			<Prop id="logisticsId" column="logistics_id" type="String"
+				comment="物流公司" />
+			<Prop id="logisticsName" column="logistics_name" type="String"
+				comment="物流公司" />
+			<Prop id="logisticsNo" column="logistics_no" type="String"
+				comment="物流编号" />
+			<Prop id="address" column="address" type="String" comment="地址与详细地址拼接存放" />
+			<Prop id="consignee" column="consignee" type="String" comment="收货人" />
+			<Prop id="mobile" column="mobile" type="String" comment="手机号码" />
+			<Prop id="remark" column="remark" type="String" comment="买家留言" />
+			<Prop id="paymentTime" column="payment_time" type="Timestamp"
+				isCreateTime="true" comment="完成订单的时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="订单创建时间" />
+			<Prop id="cancelTime" column="cancel_time" type="Timestamp"
+				isCreateTime="true" comment="订单取消时间" />
+			<Prop id="paydeTime" column="payde_time" type="Timestamp"
+				isCreateTime="true" comment="订单支付时间" />
+			<Prop id="sippingTime" column="sipping_time" type="Timestamp"
+				isCreateTime="true" comment="订单发货时间" />
+			<Prop id="signedTime" column="signed_time" type="Timestamp"
+				isCreateTime="true" comment="订单用户签收时间" />
+			<Prop id="exceedTime" column="exceed_time" type="Timestamp"
+				isCreateTime="true" comment="订单超时签收时间" />
+			<Prop id="exceedSignedTime" column="exceed_signed_time" type="Timestamp"
+				isCreateTime="true" comment="超时签收时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TOrderDetail" table="t_order_detail" comment="订单详情表">
+		<PropList>
+			<Prop id="id" column="id" type="int" primary="true"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="orderId" column="order_id" type="int" comment="订单id" />
+			<Prop id="userId" column="user_id" type="int" comment="用户id" />
+			<Prop id="productId" column="product_id" type="int" comment="商品ID" />
+			<Prop id="productCateId" column="product_cate_id" type="int"
+				comment="商品分类ID" />
+			<Prop id="productBrandId" column="product_brand_id" type="int"
+				comment="商品品牌ID" />
+			<Prop id="productCount" column="product_count" type="int"
+				comment="商品数量" />
+			<Prop id="productPrice" column="product_price" type="int"
+				comment="本次购买的价格" />
+			<Prop id="orderStatus" column="order_status" type="String"
+				comment="订单状态" />
+			<Prop id="productColor" column="product_color" type="String"
+				comment="商品颜色" />
+			<Prop id="productSize " column="product_size" type="String"
+				comment="商品尺码" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+	<!-- user related config end -->
+
+	<!-- shopping related config begin -->
+	<Domain id="TProduct" table="t_product" comment="商品表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="cateId" column="cate_id" type="int" comment="产品分类id" />
+			<Prop id="brandId" column="brand_id" type="int" comment="品牌id" />
+			<Prop id="imageId" column="image_id" type="String" comment="商品素材图片id" />
+			<Prop id="title" column="title" type="String" comment="商品名称" />
+			<Prop id="price" column="price" type="int" comment="售价" />
+			<Prop id="cover" column="cover" type="String" comment="产品封面" />
+			<Prop id="description" column="description" type="String"
+				comment="描述简介" />
+			<Prop id="putaway" column="putaway" type="String"
+				comment="是否商品 上架   Y上架   N下架" />	
+			<Prop id="hasColor" column="has_color" type="String" comment="是否有颜色" />
+			<Prop id="hasSize" column="has_size" type="String" comment="是否有尺寸" />
+			<Prop id="content" column="content" type="String" comment="商品图文详情" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TProductAttribute" table="t_product_attribute" comment="商品属性表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="productId" column="product_id" type="int" comment="产品id" />
+			<Prop id="stock" column="stock" type="int" comment="库存" />
+			<Prop id="productColor" column="product_color" type="String"
+				comment="商品颜色" />
+			<Prop id="productSize" column="product_size" type="String"
+				comment="商品尺码" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TProductBrand" table="t_product_brand" comment="产品品牌表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String" comment="品牌名称" />
+			<Prop id="cover" column="cover" type="String" comment="品牌logo图" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TProductCate" table="t_prod_cate" comment="商品功能分类">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String" comment="分类名称" />
+			<Prop id="cover" column="cover" type="String" comment="分类图片" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+
+<Domain id="TSGroupJoin" table="ts_group_join" comment="参团表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				  autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="String" comment="用户id" />
+			<Prop id="groupId" column="group_id" type="int" comment="团购id" />
+			<Prop id="joinOrderNum" column="join_order_num" type="int" comment="已参团数量" />
+			<Prop id="joinStatus" column="join_status" type="int" comment="开团状态，1：有效可参加，2：已满，参团成功，3:过期，过期自动退款" />
+			<Prop id="expireTime" column="expire_time" type="Timestamp"
+				  isCreateTime="false" comment="过期时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				  isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				  isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TSGroup" table="ts_group" comment="团购表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				  autoIncrement="true" comment="唯一标识" />
+			<Prop id="productId" column="product_id" type="int" comment="产品id" />
+			<Prop id="groupPrice" column="group_price" type="int" comment="团购价格" />
+			<Prop id="groupOrderNum" column="group_order_num" type="int" comment="团购订单数量" />
+			<Prop id="isEnabled" column="is_enabled" type="String" comment="是否可用 Y 不可用 N 被挂起" />
+			<Prop id="success_group_orders" column="success_group_orders" type="String" comment="成功团购的订单" />
+			<Prop id="startTime" column="start_time" type="Timestamp"
+				isCreateTime="true" comment="团购活动开始时间" />
+			<Prop id="endTime" column="end_time" type="Timestamp"
+				isCreateTime="true" comment="团购活动结束时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				  isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				  isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TImgCate" table="t_img_cate" comment="图片分类">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String" comment="分类名称" />
+			<Prop id="parentId" column="parent_id" type="int" comment="父分类id" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TImage" table="t_img" comment="商品素材图片表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String" comment="分类名称" />
+			<Prop id="imgSrc" column="img_src" type="String" comment="图片路径" />
+			<Prop id="imgCateId" column="img_cate_id" type="int" comment="图片分类id" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TEvent" table="t_event" comment="促销活动表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="促销活动id" />
+			<Prop id="eventCateId" column="event_cate_id" type="int" comment="活动分类id" />
+			<Prop id="title" column="title" type="String" comment="活动名称" />
+			<Prop id="cover" column="cover" type="String" comment="活动封面" />
+			<Prop id="content" column="content" type="String" comment="活动模板展示内容 16MB" />
+			<Prop id="isShow" column="is_show" type="String" comment="是否首页显示，枚举型， Y 显示活动时间和名称 N 将过期的活动设为不显示" />
+			<Prop id="startTime" column="start_time" type="Timestamp"
+				isUpdateTime="true" comment="活动开始时间" />
+			<Prop id="endTime" column="end_time" type="Timestamp"
+				isCreateTime="true" comment="活动结束时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TEventCate" table="t_event_cate" comment="活动分类表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String" comment="活动分类名称" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TEventProduct" table="t_event_product" comment="活动产品表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="productId" column="product_id" type="int" comment="商品ID" />
+			<Prop id="eventId" column="event_id" type="int" comment="活动ID" />
+			<Prop id="eventPrice" column="event_price" type="int" comment="活动产品价格" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	<!-- shopping related config end -->
+
+	<!-- vehicle related config start -->
+	<Domain id="TVehicle" table="t_vehicle" comment="房车评鉴表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="vehicleBrandId" column="vehicle_brand_id" type="int"
+				comment="房车品牌id" />
+			<Prop id="vehicleName" column="vehicle_name" type="String"
+				comment="房车名称" />
+			<Prop id="cover" column="cover" type="String" comment="房车封面图片" />
+			<Prop id="imageId" column="image_id" type="String" comment="房车素材图片id" />
+			<Prop id="introduction" column="introduction" type="String"
+				comment="房车简介" />
+			<Prop id="content" column="content" type="String" comment="房车图文详情" />
+			<Prop id="price" column="price" type="int" comment="预定价格" />
+			<Prop id="spec" column="spec" type="String" comment="房车规格型号" />
+			<Prop id="gears" column="gears" type="String" comment="档位" />
+			<Prop id="isSencond" column="is_sencond" type="String" comment="是否是2手，Y N" />
+			<Prop id="isSales" column="is_sales" type="String" comment="是否是促销，Y N" />
+			<Prop id="functionType" column="function_type" type="int"
+				comment="自行式1  拖挂式2   皮卡3" />
+			<Prop id="license" column="license" type="String" comment="驾照级别" />
+			<Prop id="bedNum" column="bed_num" type="int" comment="床位" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+	<Domain id="TVehicleBrand" table="t_vehicle_brand" comment="房车品牌表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="brandName" column="brand_name" type="String" comment="房车品牌名称" />
+			<Prop id="cover" column="cover" type="String" comment="房车品牌logo图" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TVehicleRent" table="t_vehicle_rent" comment="房车租赁表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="vehicleId" column="vehicle_id" type="int"
+				comment="房车id" />
+			<Prop id="rentPrice" column="rent_price" type="int" comment="预定价格,一天多钱" />
+			<Prop id="address" column="address" type="String" comment="联系地址" />
+			<Prop id="phone" column="phone" type="String" comment="联系电话" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+   <Domain id="TAfterOutlets" table="t_after_outlets" comment="售后网点表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String"
+				comment="网点名称" />
+			<Prop id="address" column="address" type="String" comment="网点地址" />
+			<Prop id="latitude" column="latitude" type="BigDecimal" comment="地理位置纬度" />
+			<Prop id="longitude" column="longitude" type="BigDecimal" comment="地址位置经度" />
+			<Prop id="distance" column="distance" type="Float" comment="距离" />
+			<Prop id="cover" column="cover" type="String" comment="网点封面" />
+			<Prop id="imageId" column="img_id" type="String" comment="网点图片id" />
+			<Prop id="phone" column="phone" type="String" comment="网点联系电话" />
+			<Prop id="content" column="content" type="String" comment="网点图文详情" />
+			<Prop comment="是否有效  Y有效  N无效" id="isDelete" type="String"
+				column="is_delete" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	 <Domain id="TPhysicalStore" table="t_physical_store" comment="实体店表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String"
+				comment="实体店名称" />
+			<Prop id="address" column="address" type="String" comment="实体店地址" />
+			<Prop id="latitude" column="latitude" type="BigDecimal" comment="地理位置纬度" />
+			<Prop id="longitude" column="longitude" type="BigDecimal" comment="地址位置经度" />
+			<Prop id="distance" column="distance" type="Float" comment="距离" />
+			<Prop id="cover" column="cover" type="String" comment="实体店封面" />
+			<Prop id="imageId" column="img_id" type="String" comment="实体店图片id" />
+			<Prop id="phone" column="phone" type="String" comment="实体店联系电话" />
+			<Prop id="content" column="content" type="String" comment="实体店图文详情" />
+			<Prop comment="是否有效  Y有效  N无效" id="isDelete" type="String"
+				column="is_delete" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+    
+     <Domain id="TCampsite" table="t_campsite" comment="营地表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String"  comment="营地名称" />
+			<Prop id="categoryId" column="category_id" type="int" comment="营地分类（自由营地：1，合作营地：2）" />
+			<Prop id="campsiteFunction" column="campsite_function" type="String" comment="营地基础功能，以逗号区分。" />
+			<Prop id="address" column="address" type="String" comment="营地地址" />
+			<Prop id="latitude" column="latitude" type="BigDecimal" comment="地理位置纬度" />
+			<Prop id="longitude" column="longitude" type="BigDecimal" comment="地址位置经度" />
+			<Prop id="distance" column="distance" type="Float" comment="距离" />
+			<Prop id="cover" column="cover" type="String" comment="营地封面" />
+			<Prop id="imageId" column="img_id" type="String" comment="营地图片id" />
+			<Prop id="phone" column="phone" type="String" comment="营地联系电话" />
+			<Prop comment="是否有效  Y有效  N无效" id="isDelete" type="String"
+				column="is_delete" />
+			<Prop id="content" column="content" type="String" comment="营地图文详情" />
+			<Prop id="introduction" column="introduction" type="String"
+				comment="营地简介" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TMobileRoute" table="t_mobile_route" comment="露营路线表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="title" column="title" type="String"  comment="露营路线名称" />
+			<Prop id="address" column="address" type="String" comment="露营路线地址" />
+			<Prop id="cover" column="cover" type="String" comment="露营路线封面" />
+			<Prop id="imageId" column="img_id" type="String" comment="露营路线图片id" />
+			<Prop id="phone" column="phone" type="String" comment="露营路线联系电话" />
+			<Prop id="content" column="content" type="String" comment="露营路线图文详情" />
+			<Prop id="introduction" column="introduction" type="String"
+				comment="露营路线简介" />
+			<Prop comment="是否有效  Y有效  N无效" id="isDelete" type="String"
+				column="is_delete" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TShare" table="t_share" comment="分享表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int"  comment="分享的用户ID" />
+			<Prop id="categoryId" column="category_id" type="int" comment="分享分类（结伴出游：1，营地分享：2）"/>
+			<Prop id="contentText" column="content_text" type="String" comment="内容文字" />
+			<Prop id="isShow" column="is_show" type="String" comment="是否首页显示，枚举型， Y 微信端首页显示  N微信端首页不显示" />
+			<Prop id="isEnabled" column="is_enabled" type="String" comment="Y 对经常违规用户挂起  N 不挂起" />
+			<Prop id="contentImgId" column="content_img_id" type="String" comment="内容图片" />
+			<Prop id="publishAddress" column="publish_address" type="String" comment="发布地址" />
+			<Prop id="publishTime" column="publish_time" type="Timestamp"
+				isCreateTime="true" comment="发布时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+  
+   <Domain id="TShareComment" table="t_share_comment" comment="分享的评论表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int"  comment="评论的用户ID" />
+			<Prop id="shareId" column="share_id" type="int" comment="分享id"/>
+			<Prop id="parentComment" column="parent_comment" type="int" comment="评论的上一级评论,相当于本条是回复评论"/>
+			<Prop id="userName" column="user_name" type="String" comment="评价的用户名字" />
+			<Prop id="commentContent" column="comment_content" type="String" comment="评论内容" />
+			<Prop id="commentTime" column="comment_time" type="Timestamp"
+				isCreateTime="true" comment="评论时间" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TIntegral" table="t_integral" comment="积分表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int"  comment="用户id" />
+			<Prop id="integralNum" column="integral_num" type="int" comment="积分数" />
+			<Prop id="integralSource" column="integral_source" type="String" comment="积分来源  1 订单来源 2 积分兑换来源" />
+			<Prop id="integralType" column="integral_type" type="String"
+				comment="积分类型  Y增长财富  N已提财富 " />
+			<Prop id="introduction" column="introduction" type="String"
+				comment="积分说明" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+	<Domain id="TIntegralConversion" table="t_integral_conversion" comment="积分兑换申请表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int"  comment="用户id" />
+			<Prop id="conversionNum" column="conversion_num" type="int" comment="兑换申请积分数" />
+			<Prop id="userMobile" column="user_mobile" type="String"  comment="申请用户的联系方式" />
+			<Prop id="realityConversionNum" column="reality_conversion_num" type="int" comment="实际兑换积分数" />
+			<Prop id="introduction" column="introduction" type="String"
+				comment="兑换申请积分说明" />
+			<Prop id="conversionStatus" column="conversion_status" type="String"
+				 comment="兑换申请审核状态，枚举值，Y 已审核 N 待审核" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="兑换申请时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="审核时间" />
+		</PropList>
+	</Domain>
+	
+	<Domain id="TFriend" table="t_friend" comment="三级分销好友表">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识" />
+			<Prop id="userId" column="user_id" type="int"  comment="用户id" />
+			<Prop id="friendId" column="friend_id" type="int" comment="好友id" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+		</PropList>
+	</Domain>
+   
+	<!-- 后台管理人员及权限 -->
+	<Domain comment="后台操作员表" id="TOperator" table="t_operator">
+		<PropList>
+			<Prop comment="主键ID" id="id" column="id" primary="true" type="int"
+				autoIncrement="true" />
+			<Prop comment="用户登陆账号" id="accountName" column="account_name"
+				type="String" />
+			<Prop comment="用户姓名" id="realName" column="real_name" type="String" />
+			<Prop comment="手机号码" id="mobile" column="mobile" type="String" />
+			<Prop comment="密码" id="password" column="password" type="String" />
+			<Prop comment="角色" id="roleId" column="role_id" type="int" />
+			<Prop comment="备注" id="remark" column="remark" type="String" />
+			<Prop comment="是否有效  Y有效  N无效" id="isDelete" type="String"
+				column="is_delete" />
+			<Prop id="isEnabled" column="is_enabled" type="String" comment="Y 对后台用户挂起  N 不挂起" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建时间" />
+			<Prop id="updateTime" column="update_time" type="Timestamp"
+				isUpdateTime="true" comment="修改时间" />
+		</PropList>
+	</Domain>
+
+     <Domain id="TSysLog" table="t_sys_log" comment="系统日志">
+		<PropList>
+			<Prop id="id" column="id" primary="true" type="int"
+				autoIncrement="true" comment="唯一标识符" />
+			<Prop id="logType" column="log_type" type="String" comment="日志类型  1 后台  2 微信端" />
+			<Prop id="logAction" column="log_action" type="String" comment="日志操作类型 1 登录  2 修改密码  3支付" />
+			<Prop id="logContent" column="log_content" type="String"
+				comment="日志内容" />
+			<Prop id="createTime" column="create_time" type="Timestamp"
+				isCreateTime="true" comment="创建日期" />
+		</PropList>
+	</Domain>
+     
+    <Domain id="TSysConfig" table="t_sys_config" comment="系统配置">
+		<PropList>
+			<Prop id="configKey" column="config_key" primary="true" type="String"
+				comment="配置项key，唯一" />
+			<Prop id="configValue" column="config_value" type="String"
+				comment="配置内容" />
+		</PropList>
+	</Domain>
+     
+   
+	<Domain comment="角色" id="TRole" table="t_role">
+		<PropList>
+			<Prop comment="主键ID" id="id" type="int" column="id" primary="true"
+				autoIncrement="true" />
+			<Prop comment="角色名称" id="roleName" type="String" column="role_name" />
+			<Prop comment="访问权限" id="permissions" type="String" column="permissions" />
+			<Prop comment="菜单权限" id="menus" type="String" column="menus" />
+			<Prop comment="备注" id="remark" type="String" column="remark" />
+		</PropList>
+	</Domain>
+
+	<Domain comment="权限表" id="TPermissions" table="t_permissions">
+		<PropList>
+			<Prop comment="主键ID" id="id" type="int" column="id" primary="true"
+				autoIncrement="true" />
+			<Prop comment="权限名称" id="name" type="String" column="name" />
+			<Prop comment="接口地址" id="url" type="String" column="url" />
+		</PropList>
+	</Domain>
+
+	<Domain comment="菜单表" id="TMenus" table="t_menus">
+		<PropList>
+			<Prop comment="主键ID" id="id" type="int" column="id" primary="true"
+				autoIncrement="true" />
+			<Prop comment="菜单编号" id="code" type="String" column="code" />
+			<Prop comment="菜单名称" id="name" type="String" column="name" />
+			<Prop comment="父级ID" id="fid" type="int" column="fid" />
+		</PropList>
+	</Domain>
+
+</Project>

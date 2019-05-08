@@ -1,0 +1,37 @@
+#parse("/include/header.vm")
+<title>我的团队</title> 
+</head>
+
+<body class="bg-f0f0f0">
+#if ($twoFriendList.size()>0)
+<div class="container">
+	<p class="fontstyle21">二级好友</p>
+	#foreach($t in $twoFriendList)
+		<div class="row box1-colorfff">
+			 <p class="team-p"><img src="$!{t.avatar}" class="team-p-img"/>$!{t.userName}
+			 <em class="fontstyle22">$strUtil.showTime($!{t.createTime})</em>
+			 </p>
+			 
+		</div>
+	#end
+	
+	<p class="fontstyle21">三级好友</p>
+	#foreach($t1 in $ThreeFriendList)
+ 		<div class="row box1-colorfff">
+			 <p class="team-p">
+				<img src="$!{t1.avatar}" class="team-p-img"/>$!{t1.userName}
+				<em class="fontstyle22">$strUtil.showTime($!{t1.createTime})</em>
+			 </p>
+		</div>	
+	#end	
+</div>
+#parse("/include/backtop.vm")
+#else
+<div class="container2">
+  <img src="${ctxPath}/imgs/wu.png">
+  <h1>暂无数据</h1>
+  <p>空空如也，去其它页面转转吧~</p>
+</div>
+#end 
+</body>
+</html>

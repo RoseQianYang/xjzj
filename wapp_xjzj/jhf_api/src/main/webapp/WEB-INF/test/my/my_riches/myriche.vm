@@ -1,0 +1,70 @@
+#parse("/include/header.vm")
+<title>我的财富</title>
+</head>
+ <body class="bg-f0f0f0"> 
+  <div class="container"> 
+   <div class="riche-box5 "> 
+    <div class="riche-box row"> 
+     <a href="${ctxPath}/front/my/integralList.do?status=2" class="riche-t1"> 
+      <h1>当前财富(元)</h1> 
+      <p>$!weChatUserIntegralSum</p> 
+     </a> 
+     <div class="riche-box1"> 
+      <a href="${ctxPath}/front/my/integralList.do?status=1" class="col-xs-6 col-md-6"> 
+       <h1>$!sumIntegralNum</h1> 
+       <p>总财富(元)</p> 
+      </a> 
+      <a href="${ctxPath}/front/my/integralList.do?status=3" class="col-xs-6 col-md-6"> 
+       <h1>$!integralNumSum</h1> 
+       <p>已提现(元)</p> 
+      </a> 
+     </div>
+    </div>
+   </div> 
+   ## $integralListByUserId
+   #if ($integralListByUserId.size()>0)
+   <ul class="richec-l row"> 
+   #foreach($integral in $integralListByUserId)
+    <li> 
+     <div class="col-xs-10 col-md-10 richec-c"> 
+      <h1>$integral.introduction</h1> 
+      <p>$strUtil.showTime($integral.createTime)</p> 
+     </div> 
+     <div class="col-xs-2 col-md-2 richec-num">
+      #if($integral.integralNum > 0)
+        +$integral.integralNum
+      #else
+        $integral.integralNum
+      #end
+     </div> 
+    </li> 
+    #end   
+   </ul> 
+   #else
+      <div class="mtop20 paddinglr10">
+        <div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+      </div>
+   #end 
+   <a href="${ctxPath}/front/my/addIntegralConversion.do" class="richec-b">提现</a> 
+  </div> 
+  <div class="richec-hei"></div> 
+##   <script>
+##       $(".riche-box a").click(function(){ 
+##   $.ajax({
+##     url: '${ctxPath}/front/integral/insert.do',
+##     method: 'post',
+##     data: {
+##       getWeChatIntegralPageListByUserId: $(this).input.val(),
+##     },
+##     success: function (result) {
+##       $('#confirm').modal('hide');
+##       $('#modal-text').text(result.info);
+##       $('#myModal').modal('show');  
+      
+##     }
+##   })
+## });
+## </script>
+#parse("/include/backtop.vm")
+ </body>
+</html>

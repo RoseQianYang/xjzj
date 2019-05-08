@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>首页</title>
+
+        <meta charset="UTF-8">
+        <meta
+            name="viewport"
+            content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <link href="${ctxPath}/css/bootstrap.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" href="${ctxPath}/bootstrapvalidator/css/bootstrapValidator.min.css">
+        <link href="${ctxPath}/css/font-awesome.min.css" rel="stylesheet"/>
+        <link href="${ctxPath}/css/swiper.min.css" rel="stylesheet"/>
+        <link rel="stylesheet" type="text/css" href="${ctxPath}/css/jquery.fancybox.css" media="screen"/>
+        <link href="${ctxPath}/css/skins/all.css" rel="stylesheet">
+        <link href="${ctxPath}/css/common.css" rel="stylesheet"/>
+        <script type="text/javascript" src="${ctxPath}/js/jquery.min.js"></script>
+        <script type="text/javascript" src="${ctxPath}/js/bootstrap.min.js"></script>
+        <script type="text/javascript" src="${ctxPath}/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+        <script type="text/javascript" src="${ctxPath}/js/swiper.min.js"></script>
+        <script type="text/javascript" src="${ctxPath}/js/jquery.form.js"></script>
+        <script type="text/javascript" src="${ctxPath}/js/common.js"></script>
+        <script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+    </head>
+
+    <body>
+        <div class="container">
+            <div class="row">
+                <h3>微信位置测试</h3>
+            </div>
+            <div class="row">
+                <h4>
+                    <a href="test.do">返回测试</a>
+                </h4>
+            </div>
+            <div id="location">正在配置 微信 js api ...</div>
+        </div>
+
+        <div>
+            <pre>
+wx.config({
+    debug: true, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+    appid: '${wxjs_api.appid}', // 必填，公众号的唯一标识
+    timestamp: '${wxjs_api.timestamp}', // 必填，生成签名的时间戳
+    noncestr: '${wxjs_api.noncestr}', // 必填，生成签名的随机串
+    signature: '${wxjs_api.signature}',// 必填，签名
+    jsapilist: ['openlocation', 'getlocation'] // 必填，需要使用的js接口列表
+});		
+		</pre>
+        </div>
+        <script>
+            wx.config({
+                debug: false, // 开启调试模式,调用的所有api的返回值会在客户端alert出来，若要查看传入的参数，可以在pc端打开，参数信息会通过log打出，仅在pc端时才会打印。
+                appId: '${wxjs_api.appId}', // 必填，公众号的唯一标识
+                timestamp: '${wxjs_api.timestamp}', // 必填，生成签名的时间戳
+                nonceStr: '${wxjs_api.nonceStr}', // 必填，生成签名的随机串
+                signature: '${wxjs_api.signature}', // 必填，签名
+                jsApiList: ['openLocation', 'getLocation'] // 必填，需要使用的JS接口列表
+            });
+
+            var latitude,
+                longitude;
+            //获取当前地址
+            function getLocation() {
+                wx.getLocation({
+                    type: 'wgs84', // 默认为wgs84的gps坐标，如果要返回直接给openLocation用的火星坐标，可传入'gcj02'
+                    success: function (res) {
+                        latitude = res.latitude; // 纬度，浮点数，范围为90 ~ -90
+                        longitude = res.longitude; // 经度，浮点数，范围为180 ~ -180。
+                        var speed = res.speed; // 速度，以米/每秒计
+                        var accuracy = res.accuracy; // 位置精度
+                        $("#location").html("<h4>" + latitude + "," + longitude + "</h4>");
+                    },
+                    cancel: function (res) {
+
+                        $("#wdialogContent2").text("用户拒绝授权获取地理位置");
+                        $("#wdialog2").show();
+                    }
+                });
+            }
+
+            wx.ready(function () {
+                $("#location").html("<h4>正在获取位置信息...</h4>");
+                getLocation();
+            });
+        </script>
+    </body>
+</html>

@@ -1,0 +1,71 @@
+#parse("/include/header.vm")
+<title>$!{campsite.title}详情</title> 
+<style>
+.content-msgbox p {
+    margin: 10px 15px;
+}
+</style>
+</head>
+
+<body>
+<div class="container">
+	#if($imgSrcList.size()>0)	
+	<div class="row">
+		<div class="swiper-container">
+		  <div class="swiper-wrapper">
+			#foreach($campsite in ${imgSrcList})			
+				<div class="swiper-slide"><img src="${strUtil.uploadPath($campsite)}"/></div>  
+			#end
+		  </div>
+		  <div class="swiper-pagination"></div>
+		</div>
+	</div>
+	#end
+	<div class="row">
+		<p class="msgstyle1">$!{campsite.title}</p>
+		<p class="msgstyle2"><a href="${ctxPath}/detailMap.do?address=$!{campsite.address}" class="fsize14-color787878">
+		    <img src="${ctxPath}/imgs/56-01.png" class="addr-img addr-img1">
+		    ## <i class="fa fa-map-marker icon-ff5000 fz16" aria-hidden="true"></i> 
+		    $!{campsite.address}
+			</a>
+		</p>
+	</div>
+<!--门店简介-->
+	#if ($campFunctionList.size()>0)
+		<div class="row">		 
+			 <div class="col-xs-12 col-md-12">
+				<p class="fontstyle17">基础设施</p>
+				#foreach($campfun in ${campFunctionList})
+					<span class="fontstyle18">$campfun</span>
+				#end
+			 </div>
+		</div>
+	#end
+    <div class="row mtop10">	
+		<div class="bg-color-1e1e1e text-center"><img src="${ctxPath}/imgs/mbsb.png" class="mesimg-style2" /></div>
+		<div class="content-msgbox">
+		#if($!{campsite.content}) $!{campsite.content} #else <p class="text-center">暂无详情</p>  #end
+		</div> 
+    </div>	
+<!--门店简介END-->	
+</div>
+	  
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+		<img src="${ctxPath}/imgs/loading.gif"/>
+    </div>
+  </div>
+</div>
+
+<script> 
+var mySwiper = new Swiper('.swiper-container',{
+pagination : '.swiper-pagination',
+autoplay: 5000,
+loop : true,
+autoplayDisableOnInteraction : false,
+})
+</script>
+
+</body>
+</html>

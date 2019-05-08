@@ -1,0 +1,31 @@
+	<div class="footer-hei2"></div>
+	<div class="fixed-btn1e1e1e-box">
+		<div class="col-xs-12 col-md-12">
+			<div class="col-xs-4 col-md-4">
+				<a href="${ctxPath}/wechatIndex.do" class="bottom-nav">
+					<img src="${ctxPath}/imgs/19-01.png"/>
+					<em class="bottom-nav-em">首页</em>
+				</a>
+			</div>
+			<div class="col-xs-4 col-md-4">
+				<a href="${ctxPath}/shopping/shouYe.do" class="bottom-nav">
+					<img src="${ctxPath}/imgs/21-01.png"/>
+					<em class="bottom-nav-em">商城</em>
+				</a>
+			</div>
+			<!--<div class="col-xs-3 col-md-3">
+				<a href="${ctxPath}/share/shareList.do?suserName=null" class="bottom-nav">
+					<img src="${ctxPath}/imgs/23-01.png"/>
+					<em class="bottom-nav-em">分享</em>
+				</a>
+			</div>-->
+			<div class="col-xs-4 col-md-4">
+				<a href="${ctxPath}/usercenter/userCenterList.do" class="bottom-nav">
+					<img src="${ctxPath}/imgs/25-01.png"/>
+					<em class="bottom-nav-em">我的</em>
+				</a>
+			</div>
+		</div>
+	</div>
+	
+</div>

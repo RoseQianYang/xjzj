@@ -1,0 +1,175 @@
+#parse("/include/header.vm")
+<title>收货地址</title>
+</head>
+
+<body class="bg-f0f0f0">
+
+	#if ($useraddList.size()>0)
+	<div class="container">
+		<form class="row mb30" action="${ctxPath}/front/order/orderByCart.do" method="post" id="myform">
+			<input type="hidden" name="hisTory" />
+			<input type="hidden" name="scdIds" />
+			<input type="hidden" name="price" />
+			<input type="hidden" name="addressId" /> #foreach($useraddress in ${useraddList})
+			<div class="col-xs-12 col-md-12 address-box" data-address=$!{useraddress.id}>
+				<h4 class="style1">
+				$!{useraddress.consignee}
+				<em class="pull-right">$!{useraddress.mobile}</em>				
+			</h4>
+				<div class="map-address-box">
+					<em class="pull-left"><i class="fa fa-map-marker icon-ff5000" aria-hidden="true"></i></em>
+					<em class="style2">$!{useraddress.address}$!{useraddress.addressDetail}</em>
+				</div>
+				<div class="mtop10-mbottom10 overflow-h">
+					#if($!{useraddress.isDefault} == "Y")
+					<label class="pull-left address-box5">
+					<em class="ft-weightno">默认地址</em>
+		  		</label> #else #end
+
+					<a class="delbtn pull-right" useraddId=$!{useraddress.id}>
+						<img src="${ctxPath}/imgs/53-01.png" class="img-action mleft15" />删除
+					</a>
+					<a href="${ctxPath}/front/user/editUserAddress.do?useraddId=$!{useraddress.id}" class="pull-right">
+						<img src="${ctxPath}/imgs/52-01.png" class="img-action" />编辑
+					</a>
+				</div>
+
+			</div>#end
+		</form>
+	</div>
+	#else
+	<div class="container2" style="height: 90%;">
+		<img src="${ctxPath}/imgs/wu.png">
+		<h1>暂无数据</h1>
+		<p>空空如也，请添加地址~</p>
+	</div>
+	#end
+
+	<div class="fixed-btn-box">
+		<p class="ljlx-p">
+			<a href="${ctxPath}/front/user/addUserAddress.do">添加新地址</a>
+		</p>
+	</div>
+
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="Tips">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p id="modal-text"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="Tips">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p id="modal-text">确认删除该条地址吗？</p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+					<button type="button" class="btn btn-danger" id="confirmdelbtn">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script src="${ctxPath}/js/storage.js"></script>
+	<script type="text/javascript" src="${ctxPath}/js/icheck.min.js"></script>
+	<script>
+		var useraddId;
+		$(".delbtn").click(function(event) {
+			event.stopPropagation();
+			if(!$(this).attr("useraddId")) {
+				return;
+			} else {
+				useraddId = $(this).attr("useraddId");
+				$('#confirm').modal('show');
+			}
+		})
+
+		$("#confirmdelbtn").click(function() {
+			$.ajax({
+				url: '${ctxPath}/front/user/deleteUserAddress.do',
+				method: 'post',
+				data: {
+					useraddId: useraddId
+				},
+				success: function(result) {
+					$('#confirm').modal('hide');
+					$('#modal-title').html('提示');
+					$('#modal-text').text(result.info);
+					$('#myModal').modal('show').on('hidden.bs.modal', function() {
+						if(result.code === 0) {
+							location.href = "${ctxPath}/front/user/userAddressList.do"
+						} else {
+							return false
+						}
+					})
+				}
+			})
+		})
+		// 从sessionStorage中获取购物车商品id和总价
+		var orderList = getStorage('orderList')
+		var scdIds = JSON.stringify(orderList.list)
+		var price = orderList.price
+		var hisTory = orderList.hisTory
+		$('input[name="scdIds"]').val(scdIds)
+		$('input[name="price"]').val(price)
+		$('input[name="hisTory"]').val(hisTory)
+
+		// 选择地址, 提交表单
+		$('#myform').on('click', function(e) {
+			var addressId = $(e.target).closest(".address-box").data('address')
+			$('input[name="addressId"]').val(addressId)
+			if($('input[name="hisTory"]').val() == 1) {
+				$('#myform').submit()
+			}
+
+		})
+
+		$('input').iCheck({
+			checkboxClass: 'icheckbox_square-red',
+			radioClass: 'iradio_square-red',
+			increaseArea: '20%'
+		});
+		//返回上一页触发
+		$(function() {
+			pushHistory();
+			window.addEventListener("popstate", function(e) {
+				if($('input[name="hisTory"]').val() == 1) {
+					$('#myform').submit()
+				} else {
+					window.history.go(-1);
+				}
+
+			}, false);
+
+			function pushHistory() {
+				var state = {
+					title: "title",
+					url: "#"
+				};
+				window.history.pushState(state, "title", "#");
+			}
+		});
+	</script>
+</body>
+
+</html>

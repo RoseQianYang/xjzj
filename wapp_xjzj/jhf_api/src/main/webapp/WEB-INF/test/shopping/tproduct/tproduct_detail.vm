@@ -1,0 +1,1047 @@
+#parse("/include/header.vm")
+<title>$!{product.title}详情</title>
+<style>
+	.swiper-pagination {
+		bottom: 5px!important;
+	}
+	
+	.quick-buy {
+		width: 43%;
+	}
+	
+	.quick-buy,
+	.quick-buy:hover {
+		width: 43%;
+	}
+</style>
+</head>
+
+<body>
+	<div class="container">
+		#if($proImgList.size()>0)
+		<div class="row">
+			<div class="swiper-container" style="height:375px;">
+				<div class="swiper-wrapper">
+					#foreach($img in $proImgList)
+					<div class="swiper-slide"><img src="${strUtil.uploadPath($!img)}" class="img1" /></div>
+					#end
+				</div>
+				<div class="swiper-pagination"></div>
+			</div>
+		</div>
+		#end
+		<div class="row col-lg-12 mtop10">
+			<p class="fsize16-fw700">$!{product.title}</p>
+			<!-- #set($price = ${product.price} / 100)  -->
+			#if($price)
+			<h5 class="font-color-ff5000 fsize16-fw700">￥${strUtil.rmb(${product.price})}</h5>#end
+		</div>
+		<div class="row">
+			<div class="bg-color-1e1e1e text-center marginb0"><img src="${ctxPath}/imgs/555.png" class="mesimg-style3"></div>
+			<div class="content-msgbox" style="margin-bottom:30px;">#if($!{product.content}) $!{product.content} #else
+				<p class="text-center">暂无详情</p> #end</div>
+		</div>
+		<div class="fixed-btn-box">
+			<a href="${ctxPath}/front/shoppingcart/cartDetail.do" class="mycar-box">
+				<img src="${ctxPath}/imgs/car.png" />
+			</a>
+			<a class="add-mycar-box" data-toggle="modal" data-target="#modal-add-shopcar">
+				加入购物车
+			</a>
+			<div class="quick-buy" data-toggle="modal" data-target="#modal-quick-buy">立即购买</div>
+		</div>
+
+	</div>
+
+	<!-- 加入购物车弹出框 -->
+	<div class="modal fade modal-add-shopcar" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modal-add-shopcar">
+		<div class="modal-dialog modal-lg modal-dialog-shopcar" role="document">
+			<div class="modal-content shop-car-box">
+				<form action="${ctxPath}/front/shoppingcart/insert.do" method="post" id="myform">
+					<div class="shop-hei">
+						<div class="row box-style6 f-mt10">
+							<input type="hidden" name="userId" value="10000" />
+							<input type="hidden" name="productId" value="$!{product.id}" />
+							<input type="hidden" name="productPrice" value="${product.price}" />
+							<input type="hidden" name="producNum" />
+							<input type="hidden" name="productSize" />
+							<input type="hidden" name="productColor" />
+							<div class="col-xs-4 col-md-4 paddingl0">
+								<div class="img-box-style1"><img src="${strUtil.uploadPath($!{product.cover})}" /></div>
+							</div>
+							<div class="col-xs-8 col-md-8">
+								<p class="money-style1">￥${strUtil.rmb(${product.price})}</p>
+								#foreach($productAtt in ${productAttList}) #if($velocityCount == 1)
+								<p class="fonts16-color1e1e1e">库存：<em class="kucunjs1">$!{productAtt.stock}</em></p>
+								#end #end
+								<p class="fonts16-color1e1e1e yx">已选：<em class="attrvaljs1"></em></p>
+							</div>
+						</div>
+						#if ($proSizeList == "[null]" || $proSizeList == "[]") #else
+						<div class="row box-style6">
+							<h4 class="fonts16-color1e1e1e mbottom10">尺码</h4> #foreach($productSize in ${proSizeList})
+							<h5 class="radius-box-btn pattrjs button-color1e1e1e-f5f5f5">$productSize</h5> #end
+						</div>
+						#end #if ($proColorList == "[null]" || $proColorList == "[]") #else
+						<div class="row box-style6">
+							<h4 class="fonts16-color1e1e1e mbottom10">颜色分类</h4> #foreach($productColor in $proColorList)
+							<h5 class="radius-box-btn pattrjs button-color1e1e1e-f5f5f5">$productColor</h5> #end
+						</div>
+						#end
+
+						<div class="row shop-Number">
+							<em class="pull-left fonts16-color1e1e1e mbottom10">购买数量</em>
+							<div class="gw_num">
+								<em class="jian">-</em>
+								<input type="text" value="1" class="num productNum1" />
+								<em class="add">+</em>
+							</div>
+						</div>
+					</div>
+					<div class="row add-mycar-radius">
+						<button type="button" class="radius-box-btn button-color-ff5000" id="add-shop-car-js">加入购物车</button>
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+
+	<!-- 立即购买弹出框 -->
+	<form action="${ctxPath}/front/order/quickByConfirmOrder.do" method="post" id="myquickform">
+		<div class="modal fade modal-quick-buy" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel" id="modal-quick-buy">
+			<div class="modal-dialog modal-lg modal-dialog-shopcar" role="document">
+				<div class="modal-content shop-car-box">
+					<div class="shop-hei">
+						<div class="row box-style6 f-mt10">
+							<input type="hidden" name="userId" value="10000" />
+							<input type="hidden" name="productId" value="$!{product.id}" />
+							<input type="hidden" name="productPrice" value="${product.price}" />
+							<input type="hidden" name="productNum" value="1" />
+							<input type="hidden" name="productColor" />
+							<input type="hidden" name="productSize" />
+							<div class="col-xs-4 col-md-4 paddingl0">
+								<div class="img-box-style1"><img src="${strUtil.uploadPath($!{product.cover})}" /></div>
+							</div>
+							<div class="col-xs-8 col-md-8">
+								<p class="money-style1">￥${strUtil.rmb(${product.price})}</p>
+								#foreach($productAtt in ${productAttList}) #if($velocityCount == 1)
+								<p class="fonts16-color1e1e1e">库存：<em class="kucunjs2">$!{productAtt.stock}</em></p>
+								#end #end
+								<p class="fonts16-color1e1e1e yx">已选：<em class="attrvaljs2"></em></p>
+							</div>
+						</div>
+						#if ($proSizeList == "[null]" || $proSizeList == "[]") #else
+						<div class="row box-style6">
+							<h4 class="fonts16-color1e1e1e mbottom10">尺码</h4> #foreach($productSize in ${proSizeList})
+							<h5 class="radius-box-btn pattrjs button-color1e1e1e-f5f5f5">$productSize</h5> #end
+						</div>
+						#end #if ($proColorList == "[null]" || $proColorList == "[]") #else
+						<div class="row box-style6">
+							<h4 class="fonts16-color1e1e1e mbottom10">颜色分类</h4> #foreach($productColor in $proColorList)
+							<h5 class="radius-box-btn pattrjs button-color1e1e1e-f5f5f5">$productColor</h5> #end
+						</div>
+						#end
+						<div class="row shop-Number">
+							<em class="pull-left fonts16-color1e1e1e mbottom10">购买数量</em>
+							<div class="gw_num">
+								<em class="jian">-</em>
+								<input type="text" value="1" class="num productNum2" />
+								<em class="add">+</em>
+							</div>
+						</div>
+					</div>
+					<div class="row add-mycar-radius">
+						<button type="button" class="radius-box-btn button-color-ff5000" id="add-quick-buy-js">确定购买</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<img src="${ctxPath}/imgs/loading.gif" />
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="add-car-success">
+		<div class="modal-dialog modal-sm confirm-modal">
+			<div class="modal-content">
+				<p class="mtop40-mbottom40" id="modal-text">加入购物车成功~</p>
+				<p class="font-style4" data-dismiss="modal">点击返回</p>
+				<a class="font-style4" href="${ctxPath}/front/shoppingcart/cartDetail.do">去购物车</a>
+				<em class="f-clear"></em>
+
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="Tips">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p class="modal-text"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script>
+		var mySwiper = new Swiper('.swiper-container', {
+			pagination: '.swiper-pagination',
+			autoplay: 5000,
+			loop: true,
+			autoplayDisableOnInteraction : false,
+		})
+		// 尺寸
+		var proSizeList = "$proSizeList";
+		// 颜色
+		var proColorList = "$proColorList";
+		// 监听加入购物车点击事件，如果不监听iOS下会点击无效
+		$('.add-mycar-box,.quick-buy').on('click', function(e) {
+			if(proSizeList == "[null]" && proColorList == "[null]") {
+				$(".yx").hide();
+				$.ajax({
+					url: '${ctxPath}/front/product/getProdstock.do',
+					method: 'post',
+					data: {
+						productId: $('input[name="productId"]').val(),
+					},
+					success: function(result) {
+						if(result.data != null) {
+							$(".kucunjs1,.kucunjs2").html(result.data);
+						} else {
+							$(".kucunjs1,.kucunjs2").html(0);
+						}
+					}
+				})
+
+			}
+		})
+		$("#modal-add-shopcar .pattrjs").click(function() {
+
+			attrVal1 = [];
+			if(!$(this).hasClass("button-color-f5f5f5")) {
+				if($(this).hasClass("radius-button-color-ff5000")) {
+					$(this).removeClass('radius-button-color-ff5000').addClass('button-color1e1e1e-f5f5f5');
+					$("#modal-add-shopcar .radius-button-color-ff5000").each(function() {
+						attrVal1.push($(this).html());
+					});
+				} else if($(this).hasClass("button-color1e1e1e-f5f5f5")) {
+					$(this).removeClass('button-color1e1e1e-f5f5f5');
+					$(this).addClass('radius-button-color-ff5000');
+					$(this).siblings('.radius-button-color-ff5000').addClass('button-color1e1e1e-f5f5f5');
+					$(this).siblings('.radius-button-color-ff5000').removeClass('radius-button-color-ff5000');
+					$("#modal-add-shopcar .radius-button-color-ff5000").each(function() {
+						attrVal1.push($(this).html());
+					});
+				}
+
+				var attrValJoin1 = attrVal1.join(' ; ');
+				if(proSizeList == "[null]") {
+					if(attrVal1[0]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productColor: attrVal1[0] ? attrVal1[0] : "",
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs1").html(result.data);
+								} else {
+									$(".kucunjs1").html(0);
+								}
+							}
+						})
+					}
+
+				} else if(proColorList == "[null]") {
+					if(attrVal1[0]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productSize: attrVal1[0] ? attrVal1[0] : ""
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs1").html(result.data);
+								} else {
+									$(".kucunjs1").html(0);
+								}
+							}
+						})
+					}
+
+				} else {
+					if(attrVal1[1]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productSize: attrVal1[0] ? attrVal1[0] : "",
+								productColor: attrVal1[1] ? attrVal1[1] : ""
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs1").html(result.data);
+								} else {
+									$(".kucunjs1").html(0);
+								}
+							}
+						})
+					}
+
+				}
+
+				$(".attrvaljs1").html(attrValJoin1);
+				console.log(attrValJoin1)
+			}
+		});
+
+		$("#modal-quick-buy .pattrjs").click(function() {
+
+			attrVal2 = [];
+			if(!$(this).hasClass("button-color-f5f5f5")) {
+				if($(this).hasClass("radius-button-color-ff5000")) {
+					$(this).removeClass('radius-button-color-ff5000').addClass('button-color1e1e1e-f5f5f5');
+					$("#modal-quick-buy .radius-button-color-ff5000").each(function() {
+						attrVal2.push($(this).html());
+					});
+				} else if($(this).hasClass("button-color1e1e1e-f5f5f5")) {
+					$(this).removeClass('button-color1e1e1e-f5f5f5');
+					$(this).addClass('radius-button-color-ff5000');
+					$(this).siblings('.radius-button-color-ff5000').addClass('button-color1e1e1e-f5f5f5');
+					$(this).siblings('.radius-button-color-ff5000').removeClass('radius-button-color-ff5000');
+					$("#modal-quick-buy .radius-button-color-ff5000").each(function() {
+						attrVal2.push($(this).html());
+					});
+				}
+
+				var attrValJoin2 = attrVal2.join(' ; ');
+				if(proSizeList == "[null]") {
+					if(attrVal2[0]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productColor: attrVal2[0] ? attrVal2[0] : ""
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs2").html(result.data);
+								} else {
+									$(".kucunjs2").html(0);
+								}
+							}
+						})
+					}
+				} else if(proColorList == "[null]") {
+					if(attrVal2[0]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productSize: attrVal2[0] ? attrVal2[0] : "",
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs2").html(result.data);
+								} else {
+									$(".kucunjs2").html(0);
+								}
+							}
+						})
+					}
+				} else {
+					if(attrVal2[1]) {
+						$.ajax({
+							url: '${ctxPath}/front/product/getProdstock.do',
+							method: 'post',
+							data: {
+								productId: $('input[name="productId"]').val(),
+								productSize: attrVal2[0] ? attrVal2[0] : "",
+								productColor: attrVal2[1] ? attrVal2[1] : ""
+							},
+							success: function(result) {
+								if(result.data != null) {
+									$(".kucunjs2").html(result.data);
+								} else {
+									$(".kucunjs2").html(0);
+								}
+							}
+						})
+					}
+				}
+
+				$(".attrvaljs2").html(attrValJoin2);
+			}
+		});
+
+		$(document).ready(function() {
+
+			attrVal1 = [];
+			attrVal2 = [];
+			var kucunjs1 = $(".kucunjs1").html();
+			var kucunjs2 = $(".kucunjs2").html();
+
+			if((proSizeList == "[null]" || proSizeList == "[]") && (proColorList == "[null]"|| proColorList == "[]")) {
+				// 购物车
+				//加的效果	
+				$("#modal-add-shopcar .add").click(function() {
+					if(kucunjs1 == 0 || kucunjs1 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs1").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-add-shopcar .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(kucunjs1 == 0 || kucunjs1 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				// 输入数量的效果
+				$(".productNum1").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					} else if(kucunjs1 == 0 || kucunjs1 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-shop-car-js').click(function() {
+					var n = $(".productNum1").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs1").html());
+					if(kucunjs1 == 0 || kucunjs1 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						$.ajax({
+							url: '${ctxPath}/front/shoppingcart/insert.do',
+							method: 'post',
+							data: {
+								userId: $('input[name="userId"]').val(),
+								productId: $('input[name="productId"]').val(),
+								productPrice: $('input[name="productPrice"]').val(),
+								productNum: $(".productNum1").val(),
+							},
+							success: function(result) {
+								$('#modal-text').text(result.info);
+								$('#add-car-success').modal('show');
+								if(result.code == 0) {
+									$('#modal-add-shopcar').modal('hide');
+								}
+							}
+						})
+					}
+				});
+
+				//立即购买
+				//加的效果	
+				$("#modal-quick-buy .add").click(function() {
+					if(kucunjs2 == 0 || kucunjs2 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs2").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-quick-buy .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(kucunjs2 == 0 || kucunjs2 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				//输入数量的效果
+				$(".productNum2").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					}
+					if(kucunjs2 == 0 || kucunjs2 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-quick-buy-js').click(function() {
+
+					var n = $(".productNum2").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs2").html());
+					if(kucunjs2 == 0 || kucunjs2 == undefined) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						var num = $(".productNum2").val();
+						$('input[name="productNum"]').val(num);
+						$("#myquickform").submit();
+
+					}
+				});
+
+			} else if(((proSizeList == "[null]" || proSizeList == "[]") || (proColorList == "[null]"|| proColorList == "[]"))) {
+				// 购物车
+				//加的效果	
+				$("#modal-add-shopcar .add").click(function() {
+					if(!attrVal1[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs1").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-add-shopcar .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(!attrVal1[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				// 输入的效果
+				$(".productNum1").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					} else if(!attrVal1[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-shop-car-js').click(function() {
+					var n = $(".productNum1").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs1").html());
+					if(!attrVal1[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						if(proSizeList == "[null]") {
+							$.ajax({
+								url: '${ctxPath}/front/shoppingcart/insert.do',
+								method: 'post',
+								data: {
+									userId: $('input[name="userId"]').val(),
+									productId: $('input[name="productId"]').val(),
+									productPrice: $('input[name="productPrice"]').val(),
+									productNum: $(".productNum1").val(),
+									productColor: attrVal1[0] ? attrVal1[0] : ""
+								},
+								success: function(result) {
+									$('#modal-text').text(result.info);
+									$('#add-car-success').modal('show');
+									if(result.code == 0) {
+										$('#modal-add-shopcar').modal('hide');
+									}
+								}
+							})
+						} else {
+							$.ajax({
+								url: '${ctxPath}/front/shoppingcart/insert.do',
+								method: 'post',
+								data: {
+									userId: $('input[name="userId"]').val(),
+									productId: $('input[name="productId"]').val(),
+									productPrice: $('input[name="productPrice"]').val(),
+									productNum: $(".productNum1").val(),
+									productSize: attrVal1[0] ? attrVal1[0] : "",
+								},
+								success: function(result) {
+									$('#modal-text').text(result.info);
+									$('#add-car-success').modal('show');
+									if(result.code == 0) {
+										$('#modal-add-shopcar').modal('hide');
+									}
+								}
+							})
+						}
+
+					}
+				});
+
+				//立即购买	
+				//加的效果	
+				$("#modal-quick-buy .add").click(function() {
+					if(!attrVal2[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs2").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-quick-buy .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(!attrVal2[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				//输入数量的效果
+				$(".productNum2").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					} else if(!attrVal2[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-quick-buy-js').click(function() {
+					var n = $(".productNum2").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs2").html());
+					if(!attrVal2[0]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品属性");
+						return;
+					}
+					if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						var num = $(".productNum2").val();
+						$('input[name="productNum"]').val(num);
+						if(proSizeList == "[null]") {
+							var color = attrVal2[0];
+							$('input[name="productColor"]').val(color);
+						} else {
+							var size = attrVal2[0];
+							$('input[name="productSize"]').val(size);
+						}
+						$("#myquickform").submit();
+					}
+				});
+			} else {
+				// 购物车
+				//加的效果	
+				$("#modal-add-shopcar .add").click(function() {
+					if(!attrVal1[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs1").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-add-shopcar .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(!attrVal1[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				// 输入的效果
+				$(".productNum1").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					} else if(!attrVal1[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs1").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-shop-car-js').click(function() {
+					var n = $(".productNum1").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs1").html());
+					if(!attrVal1[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs1").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						$.ajax({
+							url: '${ctxPath}/front/shoppingcart/insert.do',
+							method: 'post',
+							data: {
+								userId: $('input[name="userId"]').val(),
+								productId: $('input[name="productId"]').val(),
+								productPrice: $('input[name="productPrice"]').val(),
+								productNum: $(".productNum1").val(),
+								productSize: attrVal1[0] ? attrVal1[0] : "",
+								productColor: attrVal1[1] ? attrVal1[1] : ""
+							},
+							success: function(result) {
+								$('#modal-text').text(result.info);
+								$('#add-car-success').modal('show');
+								if(result.code == 0) {
+									$('#modal-add-shopcar').modal('hide');
+								}
+							}
+						})
+					}
+				});
+
+				//立即购买
+				//加的效果	
+				$("#modal-quick-buy .add").click(function() {
+					console.log(attrVal2[1])
+					if(!attrVal2[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var n = $(this).prev().val();
+						var num = parseInt(n) + 1;
+						var kucunjs = parseInt($(".kucunjs2").html()) + 1;
+						if(num >= kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).prev().val(num);
+						}
+
+					}
+				});
+				//减的效果
+				$("#modal-quick-buy .jian").click(function() {
+					var n = $(this).next().val();
+					var num = parseInt(n) - 1;
+					if(!attrVal2[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num == 0) {
+						return
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						} else {
+							$(this).next().val(num);
+						}
+					}
+				});
+				//输入数量的效果
+				$(".productNum2").change(function() {
+					var n = $(this).val();
+					var num = parseInt(n);
+					if(n == "") {
+						$(this).val("1");
+					} else if(!attrVal2[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else {
+						var kucunjs = parseInt($(".kucunjs2").html());
+						if(num > kucunjs) {
+							$('#confirm').modal('show');
+							$('.modal-text').text("库存不足");
+						}
+					}
+				});
+				// 提交的效果
+				$('#add-quick-buy-js').click(function() {
+					console.log("222");
+					var n = $(".productNum2").val();
+					var num = parseInt(n);
+					var kucunjs = parseInt($(".kucunjs2").html());
+					if(!attrVal2[1]) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("没有选择商品颜色和尺寸");
+						return;
+					} else if($(".kucunjs2").html() == 0) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存为0");
+					} else if(num > kucunjs) {
+						$('#confirm').modal('show');
+						$('.modal-text').text("库存不足");
+					} else {
+						var num = $(".productNum2").val();
+						var color = attrVal2[1];
+						var size = attrVal2[0];
+						$('input[name="productSize"]').val(size);
+						$('input[name="productColor"]').val(color);
+						$('input[name="productNum"]').val(num);
+						$("#myquickform").submit();
+					}
+				});
+			}
+
+			// $('#add-quick-buy-js').click(function() {
+			// 	var money = parseInt($("#productOneNum").val()) * parseInt($('input[name="productPrice"]').val());
+			// 	$("input[name='prodTotlePrice']").val(money);
+			// 	var   = attrvalQuick[0] ? attrvalQuick[0] : "";
+			// 	$("input[name='productSize']").val(productSize);
+			// 	var productColor = attrvalQuick[1] ? attrvalQuick[1] : "";
+			// 	$("input[name='productColor']").val(productColor);
+			// 	$("#myquickform").submit();
+			// });
+
+			// $('#add-quick-buy-js').click(function() {
+			// 	var n=$(".productNum").val();		
+			// 	var num=parseInt(n); 
+			//   var kucunjs=parseInt($("#kucunjs").html());
+			// 	if(!attrVal[1]){
+			// 		$('#confirm').modal('show');
+			// 		$('.modal-text').text("没有选择商品颜色和尺寸");
+			// 		return;
+			// 	}else if($("#kucunjs").html() == 0){
+			//      $('#confirm').modal('show');
+			// 		$('.modal-text').text("库存为0");
+			// 	}else if(num > kucunjs){  
+			//      $('#confirm').modal('show');
+			// 		$('.modal-text').text("库存不足");
+			// 	}else{
+			// 		$.ajax({
+			// 		url: '${ctxPath}/front/shoppingcart/insert.do',
+			// 		method: 'post',
+			// 		data: {
+			// 			userId: $('input[name="userId"]').val(),
+			// 			productId: $('input[name="productId"]').val(),
+			// 			productPrice: $('input[name="productPrice"]').val(),
+			// 			productNum: $(".productNum").val(),
+			// 			productSize: attrVal[0] ? attrVal[0] : "",
+			// 			productColor: attrVal[1] ? attrVal[1] : ""
+			// 		},
+			// 		success: function (result) {
+			// 			$('#modal-text').text(result.info);
+			// 			$('#add-car-success').modal('show');	
+			// 			if(result.code == 0){
+			// 				$('#modal-add-shopcar').modal('hide');
+			// 			}
+			// 		}
+			// 	})
+			// 	}
+
+			// });
+
+		})
+	</script>
+
+</body>
+
+</html>

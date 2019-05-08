@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>首页</title>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+<link href="${ctxPath}/css/bootstrap.min.css" rel="stylesheet" />
+<link rel="stylesheet" href="${ctxPath}/bootstrapvalidator/css/bootstrapValidator.min.css">
+<link href="${ctxPath}/css/font-awesome.min.css" rel="stylesheet" />
+<link href="${ctxPath}/css/swiper.min.css" rel="stylesheet" />
+<link rel="stylesheet" type="text/css" href="${ctxPath}/css/jquery.fancybox.css" media="screen" />
+<link href="${ctxPath}/css/skins/all.css" rel="stylesheet">
+<link href="${ctxPath}/css/common.css" rel="stylesheet" />
+<script type="text/javascript" src="${ctxPath}/js/jquery.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/bootstrapvalidator/js/bootstrapValidator.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/swiper.min.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/jquery.form.js"></script>
+<script type="text/javascript" src="${ctxPath}/js/common.js"></script>
+<script type="text/javascript" src="http://res.wx.qq.com/open/js/jweixin-1.2.0.js"></script>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row">
+			<h3>已经获取用户信息</h3>
+		</div>
+		<div class="row">
+			<h4>用户UserId: $sessUser.userId</h4>
+		</div>
+		<div class="row">
+			<h4>用户OpenID: $sessUser.openId</h4>
+		</div>
+		<div class="row">
+			<h4>用户昵称: $sessUser.nickname</h4>
+		</div>
+		<div class="row">
+			<h4>templateId:${templateId}</h4>
+		</div>
+		<div class="row">
+			<h4>头像</h4>
+			<p>$sessUser.headimgurl</p>
+			<img src="$sessUser.headimgurl" />
+		</div>
+
+		<div class="row">
+			<h4><a href="pay.do?orderId=10000">支付测试</a></h4>
+		</div>
+		
+		<div class="row">
+			<h4><a href="sendMsg.do">发送消息测试</a></h4>
+		</div>
+		
+		<div class="row">
+			<h4><a href="location.do">获取位置测试</a></h4>
+		</div>
+	</div>
+	
+	<div>
+
+	
+	</div>
+	
+</body>
+</html>

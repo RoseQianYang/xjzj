@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.IntegralConversionDao" >    
+	
+	<select id="getIntegralConversionList" parameterType="Map" resultType="com.yunqi.jhf.vo.IntegralConversionBean">
+		SELECT 	i.id,
+				i.user_id userId,
+				u.user_name userName,
+				u.user_integral_sum userIntegralSum,
+				i.conversion_num conversionNum,
+				i.introduction,
+				i.user_mobile mobile,
+				i.conversion_status conversionStatus,
+				i.create_time createTime,
+				i.update_time updateTime
+		FROM 	t_integral_conversion i,
+				t_user u
+		WHERE 	u.id = i.user_id
+		ORDER BY 	i.conversion_status DESC,
+					i.create_time DESC
+		LIMIT 	#{page} , 20
+	</select>
+	
+	<select id="getIntegralConversionCount" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_integral_conversion i,
+				t_user u
+		WHERE 	u.id = i.user_id
+	</select>   
+	
+
+</mapper>

@@ -1,0 +1,413 @@
+#parse("/include/header.vm")
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<script src="//cdn.bootcss.com/jquery-cookie/1.4.1/jquery.cookie.min.js"></script>
+<script>
+            $first=$.cookie('first_vist');
+            if(!$first||$first=='null'||$first==null){
+                $.cookie('first_vist','1',{ expires: 7 });
+            }else{
+                $.cookie('first_vist',null);
+                location.reload(true);
+            }
+</script>
+<script src="${ctxPath}/js/dropload.min.js"></script>
+<title>我的购物车</title> 
+<style>
+	.container {
+		margin-bottom: 100px;
+	}
+</style>
+</head>
+
+<body class="bg-f0f0f0">
+#if ($cartDetail.list.size()>0)
+<div class="container">
+	<div class="box-list-double">
+	#foreach($sdb in $cartDetail.list)
+	#set($Integer = 0)
+	<div class="row">
+		 <div class="col-xs-12 col-md-12 carlist-box">
+			<div class="col-xs-1 col-md-1"><input type="checkbox" name="product" value="$!{sdb.id}"></div>		 
+			<div class="col-xs-4 col-md-4"><img src="${strUtil.uploadPath($!{sdb.productCover})}"/></div>
+			<div class="col-xs-7 col-md-7">
+				<p class="fsize15 p-mb5 line1">${strUtil.safeHtml(${strUtil.left($!{sdb.productTitle},25)})}</p>
+				<div class="mtop10-mbottom10 pull-right" style="margin-top:0;">
+					<a class="delbtn" shoppingCartDetailId=$!{sdb.id}>
+						<img src="${ctxPath}/imgs/53-01.png" class="img-action mleft15" />删除
+						#foreach($productAtt in ${productAttList})	
+                $!{productAtt.stock}
+						#end
+					</a>
+				</div>
+				<p class="fsize13-color787878" style="height:18px;">
+				#if(${sdb.productSize} == "")					
+				#else <span class="mr10">$!{sdb.productSize}</span>
+				#end
+				$!{sdb.productColor}</p>
+				<div class="boximg-list-double-rb mt25">
+					<em class="pull-left">￥<em class="money-box-js">${strUtil.rmb(${sdb.productPrice})}</em></em>			
+					<div class="gw_num pull-right">
+						<em class="jian" data-attrmoney="${Price1}" shopCartDetailId=$!{sdb.id}>-</em>
+						<input type="text" value="$!{sdb.productNum}" class="num" disabled/>
+						<em class="add" data-attrmoney="${Price1}" shopCartDetailId=$!{sdb.id}>+</em>
+					</div>
+				</div>
+			</div>
+		 </div>		
+	</div>		
+	#end
+	</div>
+
+	<div class="mtop10 fixed-btn-box" style="background-color:rgb(221, 221, 221)">
+		<div class="car-checkall-box">
+			<input type="checkbox" id="check-all-js" name="check-all-js">
+			<em class="car-checkall-box-em">全选</em>
+		</div>
+		<div class="car-sum-box">￥<em class="car-sum-box-em">0</em></div>
+		
+		<form action="${ctxPath}/front/order/orderByCart.do" method="post" id="myform">
+			
+			<input type="hidden" name="scdIds"/>
+			<input type="hidden" name="price" />
+			<button type="button" class="quick-buy" disabled>结算</button>
+		</form>
+		
+	</div>	
+
+</div>	<div class="footer-hei"></div>
+#else
+<div class="container2">
+  <img src="${ctxPath}/imgs/wu.png">
+  <h1>暂无数据</h1>
+  <p>空空如也，去其它页面转转吧~</p>
+</div>
+#end 
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+  <div class="modal-dialog modal-sm">
+    <div class="modal-content">
+	  <p>支付成功</p>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <a href="${ctxPath}/front/order/orderList.do" class="btn btn-primary">查看订单</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade"
+     id="myModalDelete"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text"></p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div class="modal fade"
+     id="confirm"
+     tabindex="-1"
+     role="dialog"
+     aria-labelledby="Tips">
+	<div class="modal-dialog modal-lg" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+				<h4 class="modal-title">提示</h4>
+			</div>
+			<div class="modal-body">
+				<p id="modal-text">确认删除该商品吗？</p>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-default" data-dismiss="modal">关闭</button>
+				<button type="button" class="btn btn-danger" id="confirmdelbtn">确定</button>
+			</div>
+		</div>
+	</div>
+</div>
+
+<script type="text/javascript" src="${ctxPath}/js/icheck.min.js"></script>
+<script> 
+$(document).ready(function(){
+	var mySwiper = new Swiper('.swiper-container',{
+		pagination : '.swiper-pagination'
+	})
+
+	$('.container').iCheck({
+		checkboxClass: 'icheckbox_flat-red',
+		radioClass: 'icheckbox_flat-red',
+		increaseArea: '20%'
+	});
+
+	var shoppingCartDetailId;
+	$(".box-list-double").on('click', '.delbtn', function(){
+		if(!$(this).attr("shoppingCartDetailId")){
+			return;
+		} else {
+			shoppingCartDetailId = $(this).attr("shoppingCartDetailId");
+			$('#confirm').modal('show');
+		}
+	})	
+
+	$("#confirmdelbtn").on('click', function(){
+		$.ajax({
+			url: '${ctxPath}/front/shoppingcart/deleteShoppingCart.do',
+			method: 'post',
+			data: {
+				shoppingCartDetailId:shoppingCartDetailId
+			},
+			success: function (result) {
+				$('#confirm').modal('hide');
+				$('#modal-title').html('提示');
+				$('#modal-text').text(result.info);
+				$('#myModalDelete').modal('show').on('hidden.bs.modal', function () {
+					if (result.code === 0) {
+						location.href = "${ctxPath}/front/shoppingcart/cartDetail.do"					
+					} else {
+						return false
+					}
+				})
+			}
+		})
+	})	
+
+	var currentPage = 1
+	var data = {}
+	var price1="${Price1}"
+	$('.container').dropload({
+		scrollArea: window,
+		loadDownFn: function(me){
+			data.page = ++currentPage
+			$.ajax({
+					type: 'POST',
+					url: '/jhf/front/shoppingcart/cartDetails.do',
+					contentType: 'application/json',
+					dataType: 'json',
+					data: JSON.stringify(data),
+					success: function(res){
+						if (res.data!==null&&res.data.list.length > 0 ) {
+							var list = res.data.list
+							for(let i in list){
+								var cover = list[i].productCover
+								var index = cover.lastIndexOf('.')
+								var imgType = cover.slice(index)
+
+								$('.box-list-double').eq(0).append(
+								'<div class="row">' +
+		 							'<div class="col-xs-12 col-md-12 carlist-box">' +
+										'<div class="col-xs-1 col-md-1">' +
+											'<input type="checkbox" name="product" value="' + list[i].id + '">' +
+										'</div>' +		 
+										'<div class="col-xs-4 col-md-4">'+
+											'<img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_o' + imgType + '"/>'+
+										'</div>'+
+										'<div class="col-xs-7 col-md-7">'+
+											'<p class="fsize15 p-mb5 line1">' + list[i].productTitle + '</p>'+
+											'<div class="mtop10-mbottom10 pull-right" style="margin-top:0;">'+
+												'<a class="delbtn" shoppingCartDetailId="' + list[i].id + '">'+
+													'<img src="${ctxPath}/imgs/53-01.png" class="img-action mleft15" />删除'+
+												'</a>'+
+											'</div>'+
+											'<p class="fsize13-color787878" style="height:18px;">#if(${sdb.productColor} == "")#else <span class="mr10">'+
+												list[i].productColor + '</span>#end' + list[i].productSize +
+											'</p>'+
+											'<div class="boximg-list-double-rb mt25">'+
+											'<em class="pull-left">￥<em class="money-box-js">'+
+												list[i].productPrice/100 + '</em></em>'+	
+												'<div class="gw_num pull-right">'+
+											'<em class="jian" data-attrmoney="' + price1 + '" shopCartDetailId="' + list[i].id + '">-</em>'+
+											'<input type="text" value="'+ list[i].productNum + '" class="num" />'+
+											'<em class="add" data-attrmoney="' + price1 + '" shopCartDetailId="' + list[i].id + '">+</em>'+
+										'</div>'+
+									'</div>'+
+								'</div>'+
+							'</div>'+		
+						'</div>'		
+								)
+							}
+						} else {
+							me.lock();
+							me.noData();
+						}
+						$('.container').iCheck({
+							checkboxClass: 'icheckbox_flat-red',
+							radioClass: 'icheckbox_flat-red',
+							increaseArea: '20%'
+						});
+						me.resetload();
+					},
+					error: function(xhr, type){
+						me.lock();
+						me.resetload();
+					}
+			});
+		}
+	})
+	
+	// 加的效果
+	$(".box-list-double").on('click','.add',function(){
+		if (!$(this).attr("shopCartDetailId")) {
+			return;
+		} else {
+			shopCartDetailId = $(this).attr("shopCartDetailId");
+		} 
+		var n = $(this).prev().val();
+		var that = $(this)
+		$.ajax({
+			url: '${ctxPath}/front/shoppingcart/updateNum.do',
+			method: 'post',
+			data: {
+				shoppingCartDetailId: shopCartDetailId,
+				jiaJian: 1
+			},
+			success: function (result) {
+				if (result.code === 0) {
+					var num = parseInt(n) + 1;
+					if (num == 0) { return; }
+					that.prev().val(num);
+					var money = num * parseInt(that.attr("data-attrmoney"));
+					sumAdd();
+				} else {
+					return false
+				}
+			}
+		})
+	});
+
+	// 减的效果
+	$(".box-list-double").on('click','.jian',function(){
+		if(!$(this).attr("shopCartDetailId")){
+			return;
+		}else{
+			shopCartDetailId = $(this).attr("shopCartDetailId");
+		} 
+		var n=$(this).next().val();
+		var num=parseInt(n)-1;
+		if(num==0){ return}
+		$(this).next().val(num);
+		var money = num * parseInt($(this).attr("data-attrmoney"));
+		sumAdd();
+		$.ajax({
+			url: '${ctxPath}/front/shoppingcart/updateNum.do',
+			method: 'post',
+			data: {
+				shoppingCartDetailId:shopCartDetailId,
+				jiaJian:2
+			},
+			success: function (result) {
+				if(result.code === 0){
+					// location.reload();	
+				} else{
+					return false
+				}	
+			}
+		})
+	});
+
+	$(".car-checkall-box").on('ifChecked', "input[name='check-all-js']", function(event) {
+		$("input[name='product']").iCheck('check');
+		sumAdd();
+	});
+
+	$(".car-checkall-box").on('ifUnchecked', "input[name='check-all-js']", function(event) {
+		$("input[name='product']").iCheck('uncheck');
+		sumAdd();
+	});
+
+	$(".box-list-double").on('ifChanged', "input[name='product']", function(event){
+		if ($("input[name='product']").filter(':checked').length == $("input[name='product']").length) {
+			$('#check-all-js').prop('checked', 'checked');
+		} else if ($("input[name='product']").filter(':checked').length < 1){
+			$(".car-sum-box-em").html(0);
+		} else {
+			$('#check-all-js').prop('checked', '');
+		}
+		$('#check-all-js').iCheck('update');
+		sumAdd();
+	});
+	
+	function sumAdd(){	
+		var sum=0;
+		$("input[name='product']:checkbox").each(function(){
+			if(true == $(this).is(':checked')){
+				sum += ($(this).parents(".carlist-box").find(".money-box-js").html()) * ($(this).parents(".carlist-box").find(".num").val());
+			}
+		});
+		
+		 if(sum > 0){
+		 	$(".car-sum-box-em").html(sum);
+		 	$(".quick-buy").first().attr({"disabled":false,"style":"background-color:#ff5000;border:none"});
+		 }else{
+		 	$(".quick-buy").first().attr({"disabled":true,"style":"background-color:rgb(221, 221, 221)"});
+		 }
+		
+	}
+	
+	$(".quick-buy").click(function(){	
+		sumAdd();
+		var arr = [];
+		$("input[name='product']:checkbox").each(function(){
+			if(true == $(this).is(':checked')){
+				arr.push($(this).val());
+			}
+		});
+		var jsonString = JSON.stringify(arr);	
+		$("input[name='scdIds']").val(jsonString);
+		$("input[name='price']").val($(".car-sum-box-em").first().html());
+		$("#myform").submit();
+	});
+})
+
+window.onpageshow = function(event){
+	if (event.persisted) {
+		window.location.reload();
+	}
+}
+
+var nullmr = $(".nullmr").html();
+if(nullmr == ""){
+	$(".nullmr").hide();
+}
+
+$(function(){  
+		// 清空浏览器历史记录  
+		pushHistory();  
+		// 监听浏览器后退事件  
+		window.addEventListener("popstate",  
+			function(e) {  
+		    // 转向指定的URL  
+		    location.href="/jhf/shopping/shouYe.do";  
+		    }, false);  
+		    // 清空浏览器历史记录  
+		 function pushHistory() {  
+		        var url = "#";
+		        var state = {
+							title: "title",
+							url: "#"
+		        };  
+		        window.history.pushState(state, "title", "#");
+		    }
+		}); 
+
+</script>
+
+</body>
+</html>
+

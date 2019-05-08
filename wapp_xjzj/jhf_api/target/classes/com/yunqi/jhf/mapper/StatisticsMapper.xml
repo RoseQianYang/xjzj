@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.StatisticsDao" >    
+	
+	<!-- 用户月统计详情 -->
+	<select id="getUserStatsByMonth" parameterType="Map" resultType="com.yunqi.jhf.vo.UserStatisticsBean">
+		SELECT 
+				DATE_FORMAT(create_time,'%d') AS grpName, 
+				COUNT(1) AS sumun
+		FROM 	<![CDATA[t_user WHERE create_time>=#{latTime} 
+		AND 	create_time<#{bigTime} GROUP BY grpName]]>
+	</select>
+	
+	<!-- 用户年统计详情 -->
+	<select id="getUserStatsByYear" parameterType="Map" resultType="com.yunqi.jhf.vo.UserStatisticsBean">
+		SELECT 
+				DATE_FORMAT(create_time,'%m') AS grpName, 
+				COUNT(1) AS sumun
+		FROM 	<![CDATA[t_user WHERE create_time>=#{latTime} 
+		AND 	create_time<#{bigTime} GROUP BY grpName]]>
+	</select>
+	
+	<!-- 用户积分统计流水 -->
+	<select id="getIntegralStats" parameterType="Map" resultType="com.yunqi.jhf.vo.IntegralStatsBean">
+		SELECT 	i.id,
+				i.user_id userId,
+				u.user_name userName,
+				i.introduction,
+				i.create_time createTime
+		FROM 	t_integral i,
+				t_user u 
+		WHERE 	i.user_id = u.id 
+		<if test="userName != null">
+			AND		u.user_name like "%${userName}%"
+		</if>
+		<if test="startTime != null">
+			AND		i.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		i.create_time <![CDATA[<=]]> #{endTime}
+		</if>
+		ORDER BY i.create_time DESC
+		LIMIT #{page} , #{size}
+	</select>
+	
+	<!-- 用户积分统计流水数据条数 -->
+	<select id="getIntegralStatsCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_integral i,
+				t_user u 
+		WHERE 	i.user_id = u.id 
+		<if test="userName != null">
+			AND		u.user_name like "%${userName}%"
+		</if>
+		<if test="startTime != null">
+			AND		i.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		i.create_time <![CDATA[<=]]> #{endTime}
+		</if>
+	</select>
+	
+	<!-- 销量统计列表 -->
+	<select id="getSalesVolumeStatsList" parameterType="Map" resultType="com.yunqi.jhf.vo.SalesVolumeStatsBean">
+		SELECT 		o.product_id productId,
+					p.title productName,
+					b.title productBrandName,
+					c.title productCateName,
+					o.product_color productColor,
+					o.product_size productSize,
+					SUM(o.product_count) productCount,
+					SUM(o.product_price) productPrice
+		FROM 		t_order_detail o,
+					t_product p,
+					t_product_brand b,
+					t_prod_cate c
+		WHERE		o.product_id = p.id
+		AND			p.brand_id = b.id
+		AND			p.cate_id = c.id
+		AND			o.order_status IN ('5','6')
+		<if test="startTime != null">
+			AND		o.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		o.create_time <![CDATA[<=]]> #{endTime}
+		</if>
+		<if test="productCateId != null">
+			AND		p.cate_id = #{productCateId}
+		</if>
+		<if test="productBrandId != null">
+			AND		p.brand_id = #{productBrandId}
+		</if>
+		GROUP BY 	o.product_id,
+					o.product_color,
+					o.product_size,
+					p.title,
+					b.title,
+					c.title
+		<if test="price != null">
+			ORDER BY 	productPrice DESC
+		</if>
+		<if test="price == null">
+			ORDER BY 	productCount DESC
+		</if>
+		LIMIT #{page} , #{size}
+	</select>
+	
+	<!-- 销量统计列表参数条数 -->
+	<select id="getSalesVolumeStatsCount" parameterType="Map" resultType="int">
+		SELECT 		COUNT(1) FROM (
+			SELECT 		COUNT(1)
+			FROM 		t_order_detail o,
+						t_product p,
+						t_product_brand b,
+						t_prod_cate c
+			WHERE		o.product_id = p.id
+			AND			p.brand_id = b.id
+			AND			p.cate_id = c.id
+			AND			o.order_status IN ('5','6')
+			<if test="startTime != null">
+				AND		o.create_time >= #{startTime}
+			</if>
+			<if test="endTime != null">
+				AND		o.create_time <![CDATA[<=]]> #{endTime}
+			</if>
+			<if test="productCateId != null">
+				AND		p.cate_id = #{productCateId}
+			</if>
+			<if test="productBrandId != null">
+				AND		p.brand_id = #{productBrandId}
+			</if>
+			GROUP BY 	o.product_id,
+						p.title,
+						b.title,
+						c.title
+		) tableCount
+	</select>
+	
+	<!-- 单品月销量统计 -->
+	<select id="getSalesVolumeStatsByMonth" parameterType="Map" resultType="com.yunqi.jhf.vo.SalesVolumeStatsBean">
+		SELECT 
+				DATE_FORMAT(create_time,'%d') grpName, 
+				SUM(product_count) productCount,
+				SUM(product_price) productPrice
+		FROM 	<![CDATA[t_order_detail
+		WHERE 	product_id = #{productId}
+		AND		create_time>=#{latTime} 
+		AND 	create_time<#{bigTime} GROUP BY grpName]]>
+	</select>
+	
+	<!-- 单品年销量统计 -->
+	<select id="getSalesVolumeStatsByYear" parameterType="Map" resultType="com.yunqi.jhf.vo.SalesVolumeStatsBean">
+		SELECT 
+				DATE_FORMAT(create_time,'%m') grpName, 
+				SUM(product_count) productCount,
+				SUM(product_price) productPrice
+		FROM 	<![CDATA[t_order_detail
+		WHERE 	product_id = #{productId}
+		AND		create_time>=#{latTime} 
+		AND 	create_time<#{bigTime} GROUP BY grpName]]>
+	</select>
+	
+	<!-- 销售明细列表 -->
+	<select id="getOrderDetailList" parameterType="Map" resultType="com.yunqi.jhf.vo.OrderDetailBean">
+		SELECT 	o.id,
+				o.user_id userId,
+				u.user_name userName,
+				o.product_id productId,
+				p.title productTitle,
+				c.title productCateTitle,
+				b.title productBrandTitle,
+				o.product_price productPrice,
+				o.product_count productCount,
+				o.product_color productColor,
+				o.product_size productSize,
+				o.create_time createTime
+		FROM 	t_order_detail o,
+				t_user u,
+				t_product p, 
+				t_prod_cate c,
+				t_product_brand b
+		WHERE	o.user_id = u.id
+		AND		o.product_id = p.id
+		AND		o.product_brand_id = b.id
+		AND		o.product_cate_id = c.id
+		<if test="startTime != null">
+			AND		o.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		<![CDATA[o.create_time <= #{endTime}]]>
+		</if>
+		<if test="page != null">
+			LIMIT #{page} , #{size}
+		</if>
+	</select>
+	
+	<!-- 销售明细数据条数 -->
+	<select id="getOrderDetailCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_order_detail o,
+				t_user u,
+				t_product p, 
+				t_prod_cate c,
+				t_product_brand b
+		WHERE	o.user_id = u.id
+		AND		o.product_id = p.id
+		AND		o.product_brand_id = b.id
+		AND		o.product_cate_id = c.id
+		<if test="startTime != null">
+			AND		o.create_time >= #{startTime}
+		</if>
+		<if test="endTime != null">
+			AND		<![CDATA[o.create_time <= #{endTime}]]>
+		</if>
+	</select>
+	
+</mapper>

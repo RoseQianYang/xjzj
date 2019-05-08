@@ -1,0 +1,156 @@
+#parse("/include/header.vm")
+<title>房车租赁</title> 
+<meta name="full-screen" content="yes">
+<meta name="x5-fullscreen" content="true">
+<link rel="stylesheet" href="${ctxPath}/css/dropload.css">
+<script src="${ctxPath}/js/dropload.min.js"></script>
+<style>
+	#vehicleName {
+		overflow: hidden;
+		text-overflow: ellipsis;
+		white-space: nowrap;
+	}
+</style>
+</head>
+
+<body class="bg-f0f0f0">
+<div class="container">
+
+	<div class="row mtop20" id="container">	
+	#if ($tvehicleRentList.list.size()>0)
+		#foreach($tvehicleRent in $tvehicleRentList.list)
+			<div class="col-xs-12 col-md-12 tvehic-l">	
+				<div class="box-list-bg-f0f0f0">
+					<a href="${ctxPath}/vehicle/rent/TVehicleRentDetail.do?vehicleRentId=${tvehicleRent.id}">
+						<div class="col-xs-4 col-md-4"><img src="${strUtil.uploadPath(${tvehicleRent.cover})}"/></div>
+						<div class="col-xs-8 col-md-8" style="padding-left: 0;">
+							<p class="fz18 mb0" id="vehicleName">${strUtil.safeHtml(${strUtil.left(${tvehicleRent.vehicleName},14)})}</p>
+							<p class="fsize14-color5a5a5a">
+								#if(${tvehicleRent.functionType} == 1)
+									自行式<em class="hr-c8c8c8">|</em>
+								#elseif(${tvehicleRent.functionType} == 2)
+									拖挂式<em class="hr-c8c8c8">|</em>
+								#else
+									皮卡<em class="hr-c8c8c8">|</em>
+								#end
+								#if($!{tvehicleRent.license}) 准驾$!{tvehicleRent.license}照<em class="hr-c8c8c8">|</em> #end
+								#if($!{tvehicleRent.bedNum}) 床位×$!{tvehicleRent.bedNum} #end
+							</p>#set($Price = $tvehicleRent.rentPrice / 100)  
+							<p class="fsize14-color555 font-color-ff5000">$!Price元/天</p>
+							<p class="boximg-list-double-rb line1">
+								<a href="${ctxPath}/detailMap.do?address=$!{tvehicleRent.address}">
+								  <img src="${ctxPath}/imgs/address2.png" class="addr-img">
+									$!{tvehicleRent.address}
+								</a>
+							</p>
+						</div>
+					</a>
+				</div>	
+			</div>	
+		#end
+		
+		<!--<div class="pagination-box">
+			#set($add=$tvehicleRentList.currentPage + 1)
+			#set($minus=$tvehicleRentList.currentPage - 1)
+			<p>
+				总共有$!{tvehicleRentList.totalSize}条数据 &nbsp;&nbsp;
+				$!{tvehicleRentList.currentPage}/$!{tvehicleRentList.totalPage}页
+			</p>
+			#if ($tvehicleRentList.currentPage > 1)		
+				<a href="${ctxPath}/vehicle/rent/TVehicleRentAction.do?page=1" class="btn btn-primary">首页</a>
+				<a href="${ctxPath}/vehicle/rent/TVehicleRentAction.do?page=$!{minus}" class="btn btn-default">上一页</a>
+			#end
+			#if ($tvehicleRentList.currentPage < $tvehicleRentList.totalPage)
+				<a href="${ctxPath}/vehicle/rent/TVehicleRentAction.do?page=$!{add}" class="btn btn-default">下一页</a>
+			#end
+			
+			#if ($tvehicleRentList.currentPage > 1)		
+			<a href="${ctxPath}/vehicle/rent/TVehicleRentAction.do?page=$!{tvehicleRentList.totalPage}" class="btn btn-primary">尾页</a>
+			#end
+		</div>	-->
+	#else
+		<div class="mtop20 paddinglr10">
+			<div class="tab-box"><h6 class="text-center">暂无数据</h6></div>
+		</div>
+	#end
+    </div>
+	
+</div>
+#parse("/include/backtop.vm")
+	<script>
+		$(document).ready(function(){
+			var currentPage = 1
+			const data = {}
+
+			$('.container').dropload({
+				scrollArea: window,
+				loadDownFn: function(me){
+					data.page = ++currentPage
+					$.ajax({
+							type: 'POST',
+							url: '/jhf/vehicle/rent/getTvehicleRentPageList.do',
+							contentType: 'application/json',
+							dataType: 'json',
+							data: JSON.stringify(data),
+							success: function(res){
+								if (res.data.list !== null  ) {
+									var list = res.data.list
+									for(let i in list){
+										var cover = list[i].cover
+										var index = cover.lastIndexOf('.')
+										var imgType = cover.slice(index)
+										var functionType
+
+										switch(list[i].functionType){
+											case 1:
+												functionType="自行式"
+												break;
+											case 2:
+												functionType="拖挂式"
+												break;
+											default:
+												functionType="皮卡"
+												break;
+										}
+
+										$('#container').append(
+											'<div class="col-xs-12 col-md-12 tvehic-l">' + 
+											'<div class="box-list-bg-f0f0f0">' +
+											'<a href="${ctxPath}/vehicle/rent/TVehicleRentDetail.do?vehicleRentId='+list[i].id+'">' +
+											'<div class="col-xs-4 col-md-4"><img src="http://111.230.11.240/image/' + cover.slice(0, index) + '_s' + imgType + '"/></div>' +
+											'<div class="col-xs-8 col-md-8" style="padding-left: 0;">' + 
+											'<p class="fz18 mb0">'+list[i].vehicleName+'</p>' +
+											'<p class="fsize14-color5a5a5a">' + functionType + '<em class="hr-c8c8c8">|</em>' +
+											'准驾' + list[i].license +'照<em class="hr-c8c8c8">|</em>' +
+											'床位×'+ list[i].bedNum +'</p>' +
+											'<p class="fsize14-color555 font-color-ff5000">'+list[i].rentPrice/100+'元/天</p>' +
+											'<p class="boximg-list-double-rb line1">'+
+											'<a href="${ctxPath}/detailMap.do?address='+list[i].address+'">'+
+								  		'<img src="${ctxPath}/imgs/address2.png" class="addr-img">'+ list[i].address+
+											'</a>' +
+											'</p>' +
+											'</div>' +
+											'</a>' +
+											'</div>' +
+											'</div>'
+										)
+									}
+								} else {
+									me.lock();
+									me.noData();
+								}
+								me.resetload();
+							},
+							error: function(xhr, type){
+								me.resetload();
+								me.lock();
+								me.noData();
+							}
+					});
+				}
+			})
+		})
+	</script>
+	  #parse("/include/footer.vm")
+</body>
+</html>

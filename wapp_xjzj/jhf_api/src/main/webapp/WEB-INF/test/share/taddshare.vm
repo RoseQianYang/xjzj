@@ -1,0 +1,304 @@
+#parse("/include/header.vm")
+<style>
+	.tangram-suggestion-main {
+		width: 100% !important;
+		left: 0 !important;
+		top: 430px !important;
+	}
+	
+	.tangram-suggestion-main table {
+		font-size: 15px !important;
+	}
+	
+	#loading {
+		display: none;
+		position: fixed;
+		width: 100%;
+		height: 100%;
+		line-height: 200px;
+		text-align: center;
+		color: #ddd;
+		background: rgba(0, 0, 0, .65);
+		z-index: 100;
+	}
+
+	img {
+		-webkit-touch-callout: none;
+		-webkit-user-select: none;
+    user-select: none;
+	}
+
+	.fancybox-sharebox a {
+		position:relative;
+	}
+
+	.delete-img-icon {
+		position: absolute;
+    right: 0;
+    top: -8px;
+    display: inline-block;
+    width: 18px;
+    height: 18px;
+    background: rgba(0,0,0,0.4);
+    text-align: center;
+    line-height: 18px;
+    border-radius: 50%;
+		color: #fefefe;
+	}
+
+</style>
+<title>发布分享</title>
+</head>
+
+<body class="bg-f0f0f0">
+
+	<div id="loading">
+		<i class="fa fa-spinner fa-spin fa-3x fa-fw"></i>
+	</div>
+
+	<div class="container">
+		<form action="${ctxPath}/share/insert.do" method="post" id="myform" enctype="multipart/form-data">
+			<div class="row send-share-stylebox">
+				<div class="col-xs-12 col-md-12">
+					<p class="fontstyle15">选择类别</p>
+					<label class="labelstyle1">
+				   <input type="radio" name="cateId" checked value="1">
+				   <em class="fontstyle16">结伴出游</em>
+				</label>
+					<label class="labelstyle1">
+				   <input type="radio" name="cateId" value="2">
+				   <em class="fontstyle16">营地分享</em>
+				</label>
+				</div>
+
+				<div class="send-share-box-main">
+					<textarea class="textarea-style1" placeholder="请输入分享内容" name="contentText"></textarea>
+					<div class="fancybox-sharebox" id="fancybox-sharebox" style="padding-left: 5px;">
+						<a class="fancybox">
+							<div class="upload-img-btn" id="upload-img-button">
+								<div class="upload-img-btn5">+</div>
+								<!--<img src="${ctxPath}/imgs/71-01.png" />-->
+							</div>
+							<input type="file" id="image" name="file" accept="image/*" class="upload-img-input">
+							<input type="hidden" name="img" id="img">
+							<!--<h6 style="color:gray;">长按图片可删除</h6>-->
+						</a>
+					</div>
+
+				</div>
+
+				<div class="col-xs-12 col-md-12">
+					<p class="mapstyle4">
+						<i class="fa fa-map-marker icon-ff5000" /></i>
+						<input style="width: 90%;" type="text" name="publishAddress" id="user-location" placeholder="输入地址">
+					</p>
+					<div id="searchResultPanel" style="border:1px solid #C0C0C0;width:100%;height:auto; display:none;"></div>
+				</div>
+			</div>
+			<div class="fixed-btn-box">
+				<p class="ljlx-p" id="addbtn">发布</p>
+			</div>
+		</form>
+	</div>
+
+	<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel" id="myModal">
+		<div class="modal-dialog modal-sm confirm-modal">
+			<div class="modal-content modal-replybox">
+				<div class="close-box">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+						<i class="fa fa-close fa-close-ff5000" aria-hidden="true"></i>
+				</button>
+				</div>
+				<p class="mtop40-mbottom40">只能上传9张图片~</p>
+			</div>
+		</div>
+	</div>
+
+	<div class="modal fade" id="myModal2" tabindex="-1" role="dialog" aria-labelledby="Tips">
+		<div class="modal-dialog modal-lg" role="document">
+			<div class="modal-content">
+				<div class="modal-header">
+					<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+					<h4 class="modal-title">提示</h4>
+				</div>
+				<div class="modal-body">
+					<p id="modal-text"></p>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-danger" data-dismiss="modal">确定</button>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<script type="text/javascript" src="${ctxPath}/js/icheck.min.js"></script>
+	<script type="text/javascript" src="${ctxPath}/js/jquery.fancybox.min.js"></script>
+	<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ib5QHglR4lnOvgqoZRf9fD92ZnLWxgHO"></script>
+	<script>
+		$(document).ready(function() {
+
+			var ac = new BMap.Autocomplete({
+				"input": "user-location"
+			});
+
+			ac.addEventListener("onhighlight", function(e) {
+				var str = "";
+				var _value = e.fromitem.value;
+				var value = "";
+				if(e.fromitem.index > -1) {
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+
+				str = "FromItem<br />index = " + e.fromitem.index + "<br />value = " + value;
+
+				value = "";
+				if(e.toitem.index > -1) {
+					_value = e.toitem.value;
+					value = _value.province + _value.city + _value.district + _value.street + _value.business;
+				}
+				str += "<br />ToItem<br />index = " + e.toitem.index + "<br />value = " + value;
+				$("#searchResultPanel").html(str);
+			})
+
+			$("[data-fancybox]").fancybox({
+				selector: '[data-fancybox="group"]',
+				smallBtn: true,
+				toolbar: false
+			})
+
+			$('#fancybox-sharebox').on('click', '.delete-img-icon', function(e){
+				e.preventDefault()
+				e.stopPropagation()
+
+				const target = $(e.target).parent()
+				const index = target.index()
+				arr.splice(index, 1)
+				target.remove()
+				
+			})
+
+			$('input').iCheck({
+				checkboxClass: 'icheckbox_square-red',
+				radioClass: 'iradio_square-red',
+				increaseArea: '20%'
+			});
+
+			$(".upload-img-btn").click(function() {
+				var Gallerylength = parseInt($("#fancybox-sharebox").children('a').length);
+				if(Gallerylength > 9) {
+					$('#myModal').modal('show')
+					return;
+				}
+				$('.upload-img-input').click();
+			})
+
+			function getObjectURL(file) {
+				var url = null;
+				if(window.createObjectURL != undefined) { // basic
+					url = window.createObjectURL(file);
+				} else if(window.URL != undefined) { // mozilla(firefox)
+					url = window.URL.createObjectURL(file);
+				} else if(window.webkitURL != undefined) { // webkit or chrome
+					url = window.webkitURL.createObjectURL(file);
+				}
+				return url;
+			}
+
+			var arr = [];
+			$('.upload-img-input').change(function() {
+				var myform = $("#myform")[0]
+				var formData = new FormData(myform)
+				for (var value of formData.values()) {
+					if(value instanceof File){
+						if(value.name.length === 0){
+							return false
+						}
+					}
+				}
+				$('#loading').fadeIn()
+
+				$.ajax({
+					url: "${ctxPath}/share/doUploadImg.do",
+					type: "POST",
+					data: formData,
+					cache: false,
+					contentType: false,
+					processData: false,
+					success: function(result) {
+
+						if(result.code === 0) {
+
+							var imgUrl = getObjectURL($('.upload-img-input')[0].files[0]);
+							var eImg = "<a href='" + imgUrl + "' data-fancybox='group' class='fancybox'>" +
+							"<span class='delete-img-icon'>x</span>" + 
+							"<img src='" + imgUrl + "'/>" +
+							"</a>"
+
+							$('.upload-img-input').parent("a").before(eImg);
+
+							var jsonstr = result.data;
+							arr.push(jsonstr);
+							var resultstr = "";
+							resultstr = arr.join(",") || arr[0];
+
+							$('#img').val(resultstr);
+
+						} else {
+							$('#modal-text').html(result.info);
+							$('#myModal2').modal('show').on('hidden.bs.modal', function() {})
+						}
+					},
+					complete: function() {
+						$('#loading').fadeOut()
+					}
+				})
+
+			});
+
+			$("#addbtn").click(function() {
+				var contentText = $('textarea[name="contentText"]').val()
+
+				if (contentText.replace(/(^\s*)|(\s*$)/g, "")=="") {
+					$('#myModal2').modal('show');
+					$('#modal-text').text('分享内容不能为空');
+				} else {
+					$('textarea[name="contentText"]').focus();
+
+					var cateId;
+
+					$('input[name="cateId"]:checked').each(function() {
+						cateId = $(this).val();
+					});
+
+					$.ajax({
+						url: '${ctxPath}/share/insert.do',
+						method: 'post',
+						data: {
+							cateId: cateId,
+							contentText: $('textarea[name="contentText"]').val(),
+							contentImgId: $('input[name="img"]').val(),
+							publishAddress: $('input[name="publishAddress"]').val(),
+						},
+						success: function(result) {
+							$('#modal-title').html('提示');
+							$('#modal-text').text(result.info);
+							$('#myModal2').modal('show').on('hidden.bs.modal', function() {
+								if(result.code === 0) {
+									location.href = "${ctxPath}/share/myShareList.do"
+								} else {
+									return false
+								}
+							})
+						}
+					})
+				}
+
+			});
+		})
+	</script>
+
+</body>
+
+</html>

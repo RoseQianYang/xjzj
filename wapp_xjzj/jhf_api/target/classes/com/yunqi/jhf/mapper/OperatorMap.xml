@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>  
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >  
+<mapper namespace="com.yunqi.jhf.dao.OperatorDao" >    
+
+	<select id="getOperatorList" parameterType="Map" resultType="com.yunqi.jhf.vo.OperatorBean">
+		SELECT 	o.id,
+				o.account_name accountName,
+				o.real_name realName,
+				o.remark,
+				t.role_name roleName,
+				o.role_id roleId,
+				o.create_time,
+				o.update_time,
+				o.mobile, 
+				o.is_enabled isEnabled
+		FROM 	t_operator o, t_role t 
+		WHERE 	o.is_delete=#{isDelete} 
+		AND 	o.role_id = t.id
+		<if test="realName != null">
+			AND real_name like "%${realName}%"
+		</if>
+		<if test="mobile != null">
+			AND mobile like "%${mobile}%"
+		</if>
+		LIMIT 	#{page},20
+	</select>
+
+	<select id="getOperatorCount" parameterType="Map" resultType="int">
+		SELECT 	COUNT(1)
+		FROM 	t_operator o, t_role t 
+		WHERE 	o.is_delete=#{isDelete} 
+		AND 	o.role_id = t.id
+		<if test="realName != null">
+			AND real_name like "%${realName}%"
+		</if>
+		<if test="mobile != null">
+			AND mobile like "%${mobile}%"
+		</if>
+	</select>
+
+	<select id="getOperatorById" parameterType="int" resultType="com.yunqi.jhf.vo.OperatorBean">
+		SELECT 	o.id,
+				o.account_name accountName,
+				o.real_name realName,
+				o.remark,
+				t.role_name roleName,
+				o.role_id roleId,
+				o.create_time,
+				o.update_time,
+				o.mobile 
+		FROM 	t_operator o, t_role t 
+		WHERE 	o.is_delete='Y' 
+		AND 	o.role_id = t.id
+		AND		o.id = #{id}
+	</select>
+
+</mapper>

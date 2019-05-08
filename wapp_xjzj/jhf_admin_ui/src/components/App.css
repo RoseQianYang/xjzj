@@ -1,0 +1,32 @@
+#app a:focus {
+  text-decoration: none;
+}
+
+#app .ant-card-hoverable {
+  cursor: default;
+}
+
+#app .ant-table th,
+#app .ant-table td {
+  text-align: center !important;
+}
+
+#app .ant-table-placeholder {
+  z-index: 0;
+}
+
+.ant-menu.ant-menu-dark .ant-menu-item-selected, .ant-menu-submenu-popup.ant-menu-dark .ant-menu-item-selected{
+  background: rgb(55, 61, 65);
+}
+
+.ant-divider {
+  margin: 14px 0;
+}
+
+.ant-tabs-bar {
+  margin: 0;
+}
+
+.ant-card-bordered {
+  border:0
+}

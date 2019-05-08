@@ -1,0 +1,61 @@
+#parse("/include/header.vm")
+<title>个人中心</title>
+</head>
+
+<body>
+	<div class="container">
+		<div class="row position-relative">
+			<!-- <img src="${ctxPath}/imgs/45-01.png" />
+	  <img src="${ctxPath}/imgs/userlogo.png" class="userInfo-logo-img"/>
+	  <p class="userInfo-name">阳光的夏天</p> -->
+			<img src="${ctxPath}/imgs/45-01.png" />
+			<img src="$sessUser.headimgurl" class="userInfo-logo-img" />
+			<p class="userInfo-name">$sessUser.nickname</p>
+		</div>
+
+		<div class="col-xs-12 col-md-12">
+			<a href="${ctxPath}/front/order/orderList.do" class="userInfo"><img src="${ctxPath}/imgs/46-01.png" class="userInfo-list-img" />我的订单</a>
+			<!-- <a href="${ctxPath}/friend/friendList.do" class="userInfo"><img src="${ctxPath}/imgs/47-01.png" class="userInfo-list-img" />我的团队</a>
+			<a href="${ctxPath}/front/my/integralList.do?status=1" class="userInfo"><img src="${ctxPath}/imgs/48-01.png" class="userInfo-list-img" />我的财富</a> -->
+			<a href="${ctxPath}/front/user/userAddressList.do" class="userInfo"><img src="${ctxPath}/imgs/50-01.png" class="userInfo-list-img" />收货地址</a>
+		</div>
+		<div class="footer-hei"></div>
+		<div class="fixed-btn1e1e1e-box">
+			<div class="col-xs-12 col-md-12">
+				<div class="col-xs-4 col-md-4">
+					<a href="${ctxPath}/wechatIndex.do" class="bottom-nav">
+						<img src="${ctxPath}/imgs/19-01.png" />
+						<em class="bottom-nav-em">首页</em>
+					</a>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<a href="${ctxPath}/shopping/shouYe.do" class="bottom-nav">
+						<img src="${ctxPath}/imgs/21-01.png" />
+						<em class="bottom-nav-em">商城</em>
+					</a>
+				</div>
+				<div class="col-xs-4 col-md-4">
+					<a class="bottom-nav active">
+						<img src="${ctxPath}/imgs/24-01.png" />
+						<em class="bottom-nav-em">我的</em>
+					</a>
+				</div>
+			</div>
+		</div>
+
+	</div>
+	<script>
+		var orderList = {
+			hisTory: "0",
+			list: []
+		}
+		
+	</script>
+
+	<script src="${ctxPath}/js/storage.js"></script>
+		<script>setStorage('orderList', orderList)</script>
+</body>
+
+</html>
+<script>
+</script>
